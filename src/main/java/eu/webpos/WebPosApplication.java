@@ -8,5 +8,7 @@ public class WebPosApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WebPosApplication.class, args);
+		
+		// TEST CODE
 	}
 }
