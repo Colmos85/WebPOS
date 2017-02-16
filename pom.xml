@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>WebPOS</name>
-	<description>Backend project for WebPOS</description>
+	<description>WebPOS</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
