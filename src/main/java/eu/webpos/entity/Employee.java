@@ -25,8 +25,11 @@ public class Employee implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private String employee_fname;
-	private String employee_lname;
+	
+	//@Column(name="FirstName")
+	private String firstName;
+	//@Column(name="LastName")
+	private String lastName;
 
 	@Column(unique = true)
 	private String username;
@@ -45,20 +48,20 @@ public class Employee implements UserDetails {
 		this.id = id;
 	}
 
-	public String getEmployee_fname() {
-		return employee_fname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setEmployee_fname(String employee_fname) {
-		this.employee_fname = employee_fname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getEmployee_lname() {
-		return employee_lname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setEmployee_lname(String employee_lname) {
-		this.employee_lname = employee_lname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public List<String> getRoles() {

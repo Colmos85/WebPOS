@@ -8,8 +8,8 @@
 
 						<div class="form-group"
 							ng-class="{ 'has-error': userForm.name.$invalid && userForm.name.$dirty }">
-							<label for="name">Name:</label> <input type="text" required
-								class="form-control" ng-model="appUser.name" id="name"
+							<label for="name">First Name:</label> <input type="text" required
+								class="form-control" ng-model="appUser.firstName" id="name"
 								name="name">
 						</div>
 
@@ -71,7 +71,7 @@
 					<tbody>
 						<tr ng-repeat="user in users">
 							<td>{{$index+1}}</td>
-							<td>{{user.name}}</td>
+							<td>{{user.firstName}}</td>
 							<td>{{user.username}}</td>
 							<td><span ng-repeat="role in user.roles">{{role}}<span
 									ng-if="$index < (user.roles.length-1)">,</span>

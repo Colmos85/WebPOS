@@ -4,7 +4,8 @@ angular.module('JWTDemoApp')
 	var edit = false;
 	$scope.buttonText = 'Create';
 	var init = function() {
-		$http.get('api/users').success(function(res) {
+		//$http.get('api/users').success(function(res) {
+		$http.get('employees').success(function(res) {
 			$scope.users = res;
 			
 			$scope.userForm.$setPristine();
@@ -30,7 +31,7 @@ angular.module('JWTDemoApp')
 		$scope.buttonText = 'Create';
 	};
 	$scope.deleteUser = function(appUser) {
-		$http.delete('api/users/'+appUser.id).success(function(res) {
+		$http.delete('employees/'+appUser.id).success(function(res) {
 			$scope.deleteMessage ="Success!";
 			init();
 		}).error(function(error) {
@@ -38,7 +39,7 @@ angular.module('JWTDemoApp')
 		});
 	};
 	var editUser = function(){
-		$http.put('api/users', $scope.appUser).success(function(res) {
+		$http.put('employees', $scope.appUser).success(function(res) {
 			$scope.appUser = null;
 			$scope.confirmPassword = null;
 			$scope.userForm.$setPristine();
@@ -49,7 +50,7 @@ angular.module('JWTDemoApp')
 		});
 	};
 	var addUser = function(){
-		$http.post('api/users', $scope.appUser).success(function(res) {
+		$http.post('employees', $scope.appUser).success(function(res) {
 			$scope.appUser = null;
 			$scope.confirmPassword = null;
 			$scope.userForm.$setPristine();

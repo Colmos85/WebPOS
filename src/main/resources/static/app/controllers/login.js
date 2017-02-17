@@ -15,7 +15,7 @@ angular.module('JWTDemoApp')
 			$scope.password = null;
 			// checking if the token is available in the response
 			if (res.token) {
-				$scope.message = '';
+				$scope.message = 'Successful Login - Token received';
 				// setting the Authorization Bearer token with JWT token
 				$http.defaults.headers.common['Authorization'] = 'Bearer ' + res.token;
 
