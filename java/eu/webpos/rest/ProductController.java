@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import eu.webpos.entity.Product;
 import eu.webpos.service.ProductRepo;
 
-//@CrossOrigin(origins = "http://localhost:8000")
+@CrossOrigin(origins = "http://localhost:8000")
 @RestController
 @RequestMapping("/products")
 public class ProductController {
