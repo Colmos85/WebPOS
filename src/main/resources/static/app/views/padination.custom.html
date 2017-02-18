@@ -1,0 +1,39 @@
+<style>
+	.customPaneg{
+		margin: auto;
+	}
+	.customPagen ul {
+	    list-style-type: none;
+	    margin: 0;
+	    padding: 0;
+	    overflow: hidden;
+	    border: 1px solid;
+	    border-radius: 2px;
+	    padding: 5px;
+	}
+
+	.customPagen li {
+	    float: left;
+	    /*border-left: 1px solid;
+	    border-right: 1px solid;*/
+	}
+
+	.customPagen li a {
+	    display: block;
+	    padding: 8px;
+	    background-color: #dddddd;
+	}
+	
+</style>
+
+<div class="customPagen" layout="row" layout-align="center center" layout-padding layout-margin layout-fill>
+	<nav ng-if="pages.length >= 2" >
+	  <ul class="pagination">
+	    <li><a ng-click="selectPage(1)">First</a>
+	    </li><li><a ng-click="selectPage(currentPage - 1)">&lt;</a>
+	    </li><li><a><page-select></page-select> of {{numPages}}</a>
+	    </li><li><a ng-click="selectPage(currentPage + 1)">&gt;</a>
+	    </li><li><a ng-click="selectPage(numPages)">Last</a></li>
+	  </ul>
+	</nav>
+</div>

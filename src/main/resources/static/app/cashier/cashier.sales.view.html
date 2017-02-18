@@ -1,0 +1,30 @@
+<div class="row">
+    <h1 class="col-lg-12">This is the Sales Page - do a transaction</h1>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <ul>
+            <li>Lost Rhino Face Plant</li>
+            <li>3 Brothers Hoptimization</li>
+        </ul>
+    </div>
+
+    <div>
+    	One Product binding fine on loading view : {{ oneProduct }}
+    </div>
+    <br />
+
+	<div>
+		JSON ng-bind: <!-- <p ng-bind="products"></p> -->  {{ products }}
+		<ul ng-repeat="prod in products">
+			<li> ID: {{ prod.id }}</li>
+			<li> Name: {{ prod.name }}</li>
+		</ul>
+	</div>
+
+	<div>
+		<md-button class="md-no-focus" ng-click="test()">test</md-button>
+		 Test Result: {{ products }}
+	</div>
+
+</div>

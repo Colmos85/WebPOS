@@ -1,0 +1,178 @@
+<md-dialog aria-label="Mango (Fruit)" flex="80">
+	<form name="userForm">
+		<md-toolbar>
+	      <div class="md-toolbar-tools">
+	        <h2 style="color: white">New Product Form</h2>
+	        <span flex></span>
+<!-- 	        <md-button class="md-icon-button" ng-click="cancel()">
+	          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+	        </md-button> -->
+	        <md-button class="md-icon-button" aria-label="Close" ng-click="cancel()">
+                  <md-tooltip>Close </md-tooltip>
+                  <i class="material-icons md-36 white">close</i>
+            </md-button>
+	      </div>
+	    </md-toolbar>
+
+	    <md-dialog-content>
+			<div layout="column"  layout-gt-sm="row">
+				<div layout="column" flex="30" >
+					<div layout="column" layout-padding layout-margin>
+						<fieldset>
+						<legend><h4>Product</h4></legend>
+									
+							<md-input-container class="md-block" flex-gt-sm>
+					            <label>Barcode</label>
+					            <input ng-model="product.barcode">
+					        </md-input-container>
+					        <md-input-container class="md-block" flex-gt-sm>
+					            <label>Description</label>
+					            <input ng-model="product.description">
+					        </md-input-container>
+					        <md-input-container class="md-block" flex-gt-sm>
+					            <label>Brand</label>
+					            <md-select ng-model="user.state">
+					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+					                {{state.abbrev}}
+					              </md-option>
+					            </md-select>
+				          	</md-input-container>
+				          	<md-input-container class="md-block" flex-gt-sm>
+					            <label>Category</label>
+					            <md-select ng-model="user.state">
+					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+					                {{state.abbrev}}
+					              </md-option>
+					            </md-select>
+				          	</md-input-container>
+				          	<md-input-container class="md-block" flex-gt-sm>
+					            <label>Sub-Category</label>
+					            <md-select ng-model="user.state">
+					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+					                {{state.abbrev}}
+					              </md-option>
+					            </md-select>
+				          	</md-input-container>
+				         </fieldset>
+			     	</div>
+			     	<div layout="column" layout-padding layout-margin>
+						<fieldset>
+							<legend><h4>Image</h4></legend>
+								<div>
+									
+								</div>
+						</fieldset>
+				    </div>
+		          	<!-- <h4>Product Image</h4> -->
+				</div> <!-- End of column -->
+
+				<div layout="column" flex="70">
+					<div layout="column" flex="70" layout-margin layout-padding>
+						<fieldset>
+							<legend><h4>Price</h4></legend>
+						
+							
+							<div layout="column" flex layout-gt-sm="row">
+								<md-input-container class="md-block" flex-gt-sm>
+						            <label>Cost Price Ex Vat</label>
+						            <input ng-model="product.barcode">
+						        </md-input-container>
+						        <div hide show-gt-sm>
+						        	<!-- <md-icon md-font-icon="close" />
+		                  			<i class="material-icons md-36 white">close</i> -->
+		                  			<p style="padding: 13px">x</p>
+						        </div>
+								<md-input-container class="md-block" flex-gt-sm>
+						            <label>Markup</label>
+						            <input ng-model="product.barcode">
+						        </md-input-container>
+						        <div hide show-gt-sm>
+						        	<p style="padding: 13px">=</p>
+						        </div>
+						        <md-input-container class="md-block" flex-gt-sm>
+						            <label>Sales Price Ex Vat</label>
+						            <input ng-model="product.barcode">
+						        </md-input-container>
+							</div>
+							<div layout="column" layout-gt-sm="row" >
+								<md-input-container class="md-block" flex-gt-sm>
+					            <label>Tax Band</label>
+					            <md-select ng-model="user.state">
+					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+					                {{state.abbrev}}
+					              </md-option>
+					            </md-select>
+				          		</md-input-container>
+						        <md-input-container class="md-block" flex-gt-sm>
+						            <label>Sales Price inc Vat</label>
+						            <input ng-model="product.barcode">
+						        </md-input-container>
+							</div>
+						</fieldset>
+					</div>
+					<div layout="column" flex="70" layout-margin layout-padding>
+
+						<fieldset>
+							<legend><h4>Stock</h4></legend>
+							<div layout="column" >
+								
+								<div layout="column" layout-gt-sm="row">
+									<div flex="30">
+							        	<!-- <md-icon md-font-icon="close" />
+			                  			<i class="material-icons md-36 white">close</i> -->
+			                  			<p style="padding-top: 13px"> Ballincollig {{ }} </p>
+							        </div>
+							        <div flex="25">
+							        	<md-input-container class="md-block" flex-gt-sm">
+								            <label>Quantity to add</label>
+								            <input ng-model="product.barcode">
+								        </md-input-container>
+							        </div >
+							        <div flex="25">
+							        	<md-input-container class="md-block" flex-gt-sm">
+								            <label>Stock : 43{{  }}</label>
+								            <input ng-model="product.barcode" disabled>
+								        </md-input-container>
+							        </div>
+							    </div>
+							    <div layout="column" layout-gt-sm="row" >
+									<div flex="30">
+							        	<!-- <md-icon md-font-icon="close" />
+			                  			<i class="material-icons md-36 white">close</i> -->
+			                  			<p style="padding-top: 13px"> Mallow {{ }} </p>
+							        </div>
+							        <div flex="25">
+							        	<md-input-container class="md-block" flex-gt-sm">
+								            <label>Quantity to add</label>
+								            <input ng-model="product.barcode">
+								        </md-input-container>
+							        </div >
+							        <div flex="25">
+							        	<md-input-container class="md-block" flex-gt-sm">
+								            <label>Stock : 30{{  }}</label>
+								            <input ng-model="product.barcode" disabled>
+								        </md-input-container>
+							        </div>
+							    </div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div> <!-- End of outer column -->
+			
+		</md-dialog-content>
+
+		<md-dialog-actions layout="row">
+			<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+		        More on Wikipedia
+		      </md-button>
+		      <span flex></span>
+		      <md-button ng-click="answer('not useful')">
+		       Not Useful
+		      </md-button>
+		      <md-button ng-click="answer('useful')">
+		        Useful
+		      </md-button>
+		</md-dialog-actions>
+  </form>
+</md-dialog>

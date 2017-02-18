@@ -1,0 +1,72 @@
+
+<div layout="column" ng-cloak>
+
+	<!-- Search Bar Column -->
+	<!-- <div layout="row" layout-align="space-between center"> -->
+	<div layout="column" >
+		<div flex="5" layout="row">
+			<md-input-container class="md-block" flex> <!-- flex-gt-xs -->
+		        <label>Global Filter</label>
+		        <input type="text" ng-model="searchText">
+	      	</md-input-container>
+	      	<!-- <md-button class="md-primary" id="newProductBtn">Go</md-button> -->
+		</div>
+		<div flex="5" layout-align="end end">
+			<md-button class="md-no-focus" ng-click="openProductForm($event)">+ Product</md-button>
+		</div>
+		<div>
+			<md-button class="md-no-focus" ng-click="test(2)">test</md-button>
+			 Test product description (press test to select other product): {{ oneProduct.description }}
+		</div>
+
+		<div>
+			<!-- <p ng-bind="products"></p> -->
+			JSON: {{ products }}
+			<ul ng-repeat="prod in products">
+				<li> ID: {{ prod.id }}</li>
+				<li> Name: {{ prod.description }}</li>
+			</ul>
+		</div>
+
+
+		<div>
+			<table st-table="products" class="table table-striped" style="width:100%">
+				<thead>
+					<tr>
+						<th st-ratio="25" st-sort="name">Name</th>
+						<th st-ratio="50" st-sort="description">Description</th>
+						<th st-ratio="25" st-sort="price">Price</th>
+						<!-- <th></th> -->
+					</tr>
+				</thead>
+				<tbody ng-repeat="product in products | filter:searchText">
+					<tr class="mainTDRows" ng-click="isOpen=!isOpen" ng-class="{'selectedRow': isOpen}">
+						<td st-ratio="25" >{{product.name}}</td>
+						<td st-ratio="50" >{{product.description}}</td>
+						<td st-ratio="25" >{{product.price}}</td>
+						<!-- <td>
+						<button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
+							<i class="fa fa-minus-circle fa-lg" aria-hidden="true">
+							</i>
+						</button>
+						</td> -->
+					</tr>
+					<tr ng-if="isOpen" class="expandedTableRow">
+			          	<td colspan="3" ng-include="'/app/products/productDetails.html'"></td>
+			       	</tr>
+				</tbody>
+				<!-- <tfoot >
+					<tr>
+						<td colspan="3" class="text-center">
+							<div st-items-by-page="15" st-pagination="" st-template="app/views/padination.custom.html"></div>
+						</td>
+					</tr>
+				</tfoot> -->
+			</table>
+		</div>
+
+
+
+	</div>
+	
+</div>
