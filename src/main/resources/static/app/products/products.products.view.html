@@ -15,14 +15,14 @@
 			<md-button class="md-no-focus" ng-click="openProductForm($event)">+ Product</md-button>
 		</div>
 		<div>
-			<md-button class="md-no-focus" ng-click="test(2)">test</md-button>
-			 Test product description (press test to select other product): {{ oneProduct.description }}
+			<md-button class="md-no-focus" ng-click="test(2)">Reload Products</md-button>
+			 <!-- Test product description (press test to select other product): {{ oneProduct.description }} -->
 		</div>
 
 		<div>
 			<!-- <p ng-bind="products"></p> -->
-			JSON: {{ products }}
-			<ul ng-repeat="prod in products">
+			JSON: {{ productsCtrl.products }}
+			<ul ng-repeat="prod in productsCtrl.products">
 				<li> ID: {{ prod.id }}</li>
 				<li> Name: {{ prod.description }}</li>
 			</ul>
@@ -30,20 +30,20 @@
 
 
 		<div>
-			<table st-table="products" class="table table-striped" style="width:100%">
+			<table st-table="productsCtrl.products" class="table table-striped" style="width:100%">
 				<thead>
 					<tr>
-						<th st-ratio="25" st-sort="name">Name</th>
+						<th st-ratio="25" st-sort="name">Barcode</th>
 						<th st-ratio="50" st-sort="description">Description</th>
-						<th st-ratio="25" st-sort="price">Price</th>
+						<th st-ratio="25" st-sort="price">Price Ex VAT</th>
 						<!-- <th></th> -->
 					</tr>
 				</thead>
-				<tbody ng-repeat="product in products | filter:searchText">
+				<tbody ng-repeat="product in productsCtrl.products | filter:searchText">
 					<tr class="mainTDRows" ng-click="isOpen=!isOpen" ng-class="{'selectedRow': isOpen}">
-						<td st-ratio="25" >{{product.name}}</td>
+						<td st-ratio="25" >{{product.barcode}}</td>
 						<td st-ratio="50" >{{product.description}}</td>
-						<td st-ratio="25" >{{product.price}}</td>
+						<td st-ratio="25" >{{product.tradePriceEx}}</td>
 						<!-- <td>
 						<button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
 							<i class="fa fa-minus-circle fa-lg" aria-hidden="true">

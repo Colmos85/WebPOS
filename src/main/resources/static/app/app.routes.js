@@ -166,7 +166,7 @@
 
               'content@home': {
                 templateUrl: 'app/products/products.products.view.html',
-                controller: 'productsCtrl'
+                controller: 'productsCtrl as productsCtrl'
               }
             }
           })

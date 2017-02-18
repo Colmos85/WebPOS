@@ -23,28 +23,21 @@ public class ProductController {
 	@Autowired
 	private ProductRepo rp;
 	
-/*	@RequestMapping("/")
-	//@PreAuthorize("hasRole('ROLE_ADMIN')")
-	@ResponseBody
-	public List<Product> findall()
-	{
-		return rp.findAll();
-	};*/
-	
+
 	
 	/**
 	 * Web service for getting all the Products in the application.
 	 * 
 	 * @return list of all Products
 	 */
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public List<Product> findAll() {
 		return rp.findAll();
 	}
 	
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	public Product findone(@PathVariable("id") int id)
 	{

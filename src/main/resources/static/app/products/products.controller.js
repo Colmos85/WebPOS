@@ -26,10 +26,11 @@
         //$scope.products = productsFactory.allProducts;
         //$scope.products = productsFactory.getProducts();
 
-        $scope.products = productsFactory.getAllProducts();
+        $scope.products = productsFactory.getProducts();//productsFactory.getAllProducts();
 
         $scope.test = function(productId) {
-            $scope.products = productsFactory.getAllProducts();
+        	$scope.products = productsFactory.getProducts();
+            //$scope.products = productsFactory.getAllProducts();
             //$scope.oneProduct = productsFactory.get({id: productId});
             //$scope.products = productsFactory.query(function(){
             //    console.log("Length of array AFTER BUTTON PRESS : ", $scope.products.length);
