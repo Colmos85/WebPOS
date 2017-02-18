@@ -28,7 +28,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
- * All web services in this controller will be available for all the users
  * 
  * @author Colm O Sullivan
  *
@@ -37,7 +36,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @RestController
 public class HomeRestController {
 	@Autowired
-	private EmployeeRepo appUserRepository;
+	private EmployeeRepo employeeRepository;
 
 	/**
 	 * This method is used for user registration. Note: user registration is not
@@ -48,13 +47,13 @@ public class HomeRestController {
 	 */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<Employee> createUser(@RequestBody Employee appUser) {
-		if (appUserRepository.findOneByUsername(appUser.getUsername()) != null) {
+		if (employeeRepository.findOneByUsername(appUser.getUsername()) != null) {
 			throw new RuntimeException("Username already exist");
 		}
 		List<String> roles = new ArrayList<>();
 		roles.add("USER");
 		appUser.setRoles(roles);
-		return new ResponseEntity<Employee>(appUserRepository.save(appUser), HttpStatus.CREATED);
+		return new ResponseEntity<Employee>(employeeRepository.save(appUser), HttpStatus.CREATED);
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class HomeRestController {
 	public Employee user(Principal principal) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String loggedUsername = auth.getName();
-		return appUserRepository.findOneByUsername(loggedUsername);
+		return employeeRepository.findOneByUsername(loggedUsername);
 	}
 
 	/**
@@ -81,7 +80,7 @@ public class HomeRestController {
 	public ResponseEntity<Map<String, Object>> login(@RequestParam String username, @RequestParam String password,
 			HttpServletResponse response) throws IOException {
 		String token = null;
-		Employee appUser = appUserRepository.findOneByUsername(username);
+		Employee appUser = employeeRepository.findOneByUsername(username);
 		Map<String, Object> tokenMap = new HashMap<String, Object>();
 		if (appUser != null && appUser.getPassword().equals(password)) {
 			token = Jwts.builder().setSubject(username).claim("roles", appUser.getRoles()).setIssuedAt(new Date())
