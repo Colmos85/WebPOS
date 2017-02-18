@@ -28,6 +28,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
+ * All web services in this controller will be available for users 
  * 
  * @author Colm O Sullivan
  *
