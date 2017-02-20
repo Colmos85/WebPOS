@@ -19,18 +19,20 @@
             password : $scope.password
           }
         }).then(function successCallback(res) {
-          console.log(res);
+          //console.log(res);
           $scope.password = null;
           // checking if the token is available in the response
           if (res.data.token) {
-            console.log("Inside the login :", res.data.user.firstName);
             $scope.message = 'Successful Login - Token received';
             // setting the Authorization Bearer token with JWT token
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token;
-
+            localStorage.setItem('token', res.data.token);
+            
             // setting the user in AuthService
             AuthService.user = res.data.user;
-            console.log("user assigned to: ", AuthService.user.firstName);
+            // transform user object to string for storing in local storage 
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            
             $rootScope.$broadcast('LoginSuccessful');
             // going to the home page
             $state.go('home.gettingstarted');

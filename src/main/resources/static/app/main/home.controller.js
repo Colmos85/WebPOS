@@ -10,11 +10,18 @@
       '$timeout',
       '$location',
       'menu',
-      function ($rootScope, $log, $state, $timeout, $location, menu/*, AuthService*/) {
+      '$http',
+      function ($rootScope, $log, $state, $timeout, $location, menu, $http/*, AuthService*/) {
 
         var vm = this;
         
         vm.test = "This is a test string";
+        
+        // Set the token from storage to be the default on http requests
+        // After refresh page the token will be retrieved from storage
+    	if(localStorage.getItem('token')){
+    		$http.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+    	}
 
         //vm.user = AuthService.user;
 
@@ -42,9 +49,15 @@
 
     .controller("titleController", function($rootScope, $log, $state, $timeout, $location, $scope, $interval, AuthService) {
         
+    	// set the username for the title bar
+    	if(AuthService.user !== null){
+    		$scope.username = AuthService.user.firstName;
+    	}
+    		
         $scope.activeRegister = "Main Register";
-        $scope.username = AuthService.user.firstName;
 
+        
+        
         var tick = function() {
             $scope.clock = Date.now();
         }
@@ -59,6 +72,8 @@
         });
         $scope.logout = function() {
           AuthService.user = null;
+          localStorage.setItem('user', null);
+          localStorage.setItem('token', null);
           $rootScope.$broadcast('LogoutSuccessful');
           $state.go('login');
         };
