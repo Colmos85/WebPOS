@@ -8,6 +8,7 @@
       '$rootScope',
       '$log',
       '$http',
+      '$q',
       '$state',
       '$scope',
       '$timeout',
@@ -16,91 +17,127 @@
       '$resource',
       'productsFactory',
 
-      function ($rootScope, $log, $http, $state, $scope, 
+      function ($rootScope, $log, $http, $q, $state, $scope, 
                 $timeout, $location, $mdDialog, $resource, productsFactory) {
+    	  
+    	var vm = this;
+        
+    	vm.products =[];
+    	
+    	// Load products 
+        $http({
+            method : 'GET',
+            url : 'products/'
+        }).then(function successCallback(response) {
+        	console.log("success response: ", response);
+        	console.log("success response Data: ", response.data);
+        	vm.products = response.data;
+        }, function errorCallback(response) {
+            console.log(response.statusText);
+        });
+    	
+    	vm.test = function(productId) {
+    		vm.products = productsFactory.getAllProducts();
+        };
+    	
+/*    	vm.products = [];
+        function getAllProductsNew() {
+          var getProductsData = productsFactory.getProducts();
 
-        //$scope.oneProduct = productsFactory.get({id: 1});
+          getProductsData.then(function (post) {
+             vm.products = post.data;
+
+          }, function () {
+             alert('Error in getting post records');
+          });
+        }
+              
+        getAllProductsNew();*/
+
+/*        //$scope.oneProduct = productsFactory.get({id: 1});
         //var allProducts = productsFactory.query(console.log);
 
         //$scope.products = null;
         //$scope.products = productsFactory.allProducts;
         //$scope.products = productsFactory.getProducts();
 
-        $scope.products = productsFactory.getProducts();//productsFactory.getAllProducts();
-
-        $scope.test = function(productId) {
-        	$scope.products = productsFactory.getProducts();
+        $scope.products = productsFactory.getAllProducts(); //productsFactory.getProducts();
+    	vm.products = [];
+        
+    	vm.hello = "Hello buddy!!!";
+        
+    	vm.test = function(productId) {
+        	//$scope.products = productsFactory.getProducts();
             //$scope.products = productsFactory.getAllProducts();
             //$scope.oneProduct = productsFactory.get({id: productId});
             //$scope.products = productsFactory.query(function(){
             //    console.log("Length of array AFTER BUTTON PRESS : ", $scope.products.length);
             //});
+        	
+        	$http({
+                method : 'GET',
+                url : 'products/'
+            }).then(function successCallback(response) {
+            	console.log("Controller http request: ", response);
+            	vm.products = response.data;
+            	return vm.products;
+            	console.log("Length of array: ", vm.products.length);
+            }, function errorCallback(response) {
+                console.log(response.statusText);
+            });
             
-        };
+        };*/
 
-        /*$http.get('http://localhost:8080/products/').
-        then(function(response) {
-            $scope.products = response.data;
-        });*/
+        vm.openDialog = function(){
+	        $mdDialog.show({
+	          controller: function($scope, $mdDialog){
+	            // do something with dialog scope
+	          },
+	          template: '<md-dialog aria-label="My Dialog">'+
+	                        '<md-dialog-content class="sticky-container">Blah Blah' +
+	                        '</md-dialog-content>' +
+	                        '<md-button ng-click=close()>Close</md-button>' +
+	                        '</md-dialog>',
+	          targetEvent: event
+	        });
+	     };
 
-        
+	     vm.openProductForm = function(event) {
+	        $mdDialog.show({
+	          controller: DialogController,
+	          templateUrl: 'app/products/productForm.html',
+	          parent: angular.element(document.body),
+	          targetEvent: event,
+	          clickOutsideToClose:true,
+	          fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+	        })
+	        .then(function(answer) {
+	          $scope.status = 'You said the information was "' + answer + '".';
+	        }, function() {
+	          scope.status = 'You cancelled the dialog.';
+	        });
+	     };
 
-
-
-
-        $scope.openDialog = function(){
-
-        $mdDialog.show({
-          controller: function($scope, $mdDialog){
-            // do something with dialog scope
-          },
-          template: '<md-dialog aria-label="My Dialog">'+
-                        '<md-dialog-content class="sticky-container">Blah Blah' +
-                        '</md-dialog-content>' +
-                        '<md-button ng-click=close()>Close</md-button>' +
-                        '</md-dialog>',
-          targetEvent: event
-        });
-      };
-
-      $scope.openProductForm = function(event) {
-        $mdDialog.show({
-          controller: DialogController,
-          templateUrl: 'app/products/productForm.html',
-          parent: angular.element(document.body),
-          targetEvent: event,
-          clickOutsideToClose:true,
-          fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-        })
-        .then(function(answer) {
-          $scope.status = 'You said the information was "' + answer + '".';
-        }, function() {
-          scope.status = 'You cancelled the dialog.';
-        });
-      };
-
-      function DialogController($scope, $mdDialog) {
-        $scope.hide = function() {
-          $mdDialog.hide();
-        };
-
-        $scope.cancel = function() {
-          $mdDialog.cancel();
-        };
-
-        $scope.answer = function(answer) {
-          $mdDialog.hide(answer);
-        };
-      };
+	     function DialogController($scope, $mdDialog) {
+	        $scope.hide = function() {
+	          $mdDialog.hide();
+	        };
+	
+	        $scope.cancel = function() {
+	          $mdDialog.cancel();
+	        };
+	
+	        $scope.answer = function(answer) {
+	          $mdDialog.hide(answer);
+	        };
+	     };
 
 
-      $scope.helloWorld = function(){
-        console.log("Hello from productsCtrl");
-      };
-
-
-
-    }])
+	     vm.helloWorld = function(){
+	    	 console.log("Hello from productsCtrl");
+	     };
+	     
+    }]) // END OF productsCtrl
 
     .controller('brandsCtrl', [
       '$rootScope',

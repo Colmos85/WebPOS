@@ -4,11 +4,11 @@
     <div ng-controller="titleController" class="md-toolbar-tools">
 
       <div ng-controller="sidebarController" hide-gt-sm>
-      <md-button class="md-icon-button" ng-click="openSideNavPanel()">
-          <i class="material-icons md-36 white">menu</i>
-      <!-- <md-tooltip>Side Menu</md-tooltip> -->
-           <!-- <md-icon icon="menu" style="fill: white" size="24"></md-icon>  -->
-      </md-button>
+        <md-button class="md-icon-button" ng-click="openSideNavPanel()">
+            <i class="material-icons md-36 white">menu</i>
+        <!-- <md-tooltip>Side Menu</md-tooltip> -->
+             <!-- <md-icon icon="menu" style="fill: white" size="24"></md-icon>  -->
+        </md-button>
       </div>
 
       <div >
@@ -25,7 +25,9 @@
 
       <span flex></span>
 
-      <md-button> Logout
+      <md-button> 
+      <span ng-click="logout()" href=""
+            class="logout">Logout</span>
         <!-- <input name="submit" type="submit" id="submit" value="Log out"> -->
       </md-button>
     </div>

@@ -13,6 +13,8 @@
       function ($rootScope, $log, $state, $timeout, $location, menu/*, AuthService*/) {
 
         var vm = this;
+        
+        vm.test = "This is a test string";
 
         //vm.user = AuthService.user;
 
