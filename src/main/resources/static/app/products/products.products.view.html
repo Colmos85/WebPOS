@@ -16,7 +16,7 @@
 			<md-button class="md-no-focus" ng-click="productsCtrl.openProductForm($event)">+ Product</md-button>
 		</div>
 		<div>
-			<md-button class="md-no-focus" ng-click="productsCtrl.test(1)">Reload Products</md-button>
+			<md-button class="md-no-focus" ng-click="productsCtrl.reload(1)">Reload Products</md-button>
 			 <!-- Test product description (press test to select other product): {{ oneProduct.description }} -->
 		</div>
 
@@ -33,7 +33,7 @@
 			<table st-table="productsCtrl.products" class="table table-striped" style="width:100%">
 				<thead>
 					<tr>
-						<th st-ratio="25" st-sort="barcode">Barcode</th>
+						<th st-ratio="25" st-sort="barcode">Brand</th>
 						<th st-ratio="50" st-sort="description">Description</th>
 						<th st-ratio="25" st-sort="price">Price</th>
 						<!-- <th></th> -->
@@ -41,9 +41,9 @@
 				</thead>
 				<tbody ng-repeat="product in productsCtrl.products | filter:searchText">
 					<tr class="mainTDRows" ng-click="isOpen=!isOpen" ng-class="{'selectedRow': isOpen}">
-						<td st-ratio="25" >{{product.barcode}}</td>
+						<td st-ratio="25" >{{product.brand.brandName}}</td>
 						<td st-ratio="50" >{{product.description}}</td>
-						<td st-ratio="25" >{{product.tradePriceEx}}</td>
+						<td st-ratio="25" >€ {{product.tradePriceEx}}</td>
 						<!-- <td>
 						<button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
 							<i class="fa fa-minus-circle fa-lg" aria-hidden="true">

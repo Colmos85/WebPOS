@@ -9,6 +9,7 @@
     'myApp.products.module',
     'myApp.cashier.module',
     'myApp.auth.module',
+    'myApp.general.module',
     'ngAnimate',
     'ui.router',
     'ngMaterial',

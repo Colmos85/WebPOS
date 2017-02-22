@@ -1,24 +1,36 @@
 <div class="extendedTableData" flex layout-fill layout="row" layout-xs="column">
-	<div flex="33" layout="column">
-		Product ID: {{ product.id }}
+	<div layout="column"> <!-- flex="33" -->
+		<h4>Product Details</h4>
 		<br />
-		Product Description: {{ product.description }}
+		Barcode: {{ product.barcode }}
+		<br />
+		Brand: {{ product.brand.brandName }}
+		<br />
+		Description: {{ product.description }}
 	</div>	
 
-	<div flex="33" layout="column">
-		Stock
-		<br />
+	<div layout="column">
+		<h4>Stock</h4>
+		<ul ng-repeat="store in productsCtrl.stores "> <!-- | filter : {productsCtrl.stores.stock.id: product.stock.id} -->
+			<li>Store Name : {{ store.name }}</li>
+<!-- 			<ul ng-repeat="" >
+				<li>{{ store.stock. }}</li>
+			</ul> -->
+			<li>Quantity : {{ productsCtrl.getStoreQuantity(store.stock, product.stock) }}</li>
+		</ul>
+<!-- 		<br />
 		Ballincollig Store: 5
 		<br />
 		Mallow Store: 15
-		<br />
-		Parent Controller: {{ vm.controllerName }}
+		<br /> -->
 	</div>
 
-	<div flex="33" layout="column">
-		Price Breakdown
+	<div layout="column">
+		<h4>Price Breakdown</h4>
 		<br />
-		{{ product.price }}
+		Trade Price Ex VAT: €{{ product.tradePriceEx }}
+		<br />
+		Markup: {{ product.markup }} %
 	</div>
 
 

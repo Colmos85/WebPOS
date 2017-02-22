@@ -11,22 +11,29 @@
 
       var allProducts = [{"id":1,"description":"Office Home and Business 2013","tradePriceEx":10.0,"markup":10.0,"quantity":50,"barcode":"13321566324"}];
       
+      factory.initLoadProducts = function(){
+        return $http.get('products/');
+      }
+
       
       factory.loadAllProducts = function(){
           $http({
               method : 'GET',
               url : 'products/'
           }).then(function successCallback(response) {
-          	console.log("success response: ", response);
-          	console.log("success response Data: ", response.data);
+          	console.log("Products: success response Data: ", response.data);
           	allProducts = response.data;
-              return allProducts;
+            return allProducts;
           }, function errorCallback(response) {
               console.log(response.statusText);
           });
       };
+
+      factory.loadAllProducts();
+      //loadAllProducts(); // not defined on load
       
       factory.getAllProducts = function () {
+          factory.loadAllProducts();
           return allProducts;
       };
 

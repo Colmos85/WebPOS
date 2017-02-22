@@ -16,29 +16,59 @@
       '$mdDialog',
       '$resource',
       'productsFactory',
+      'storesFactory',
 
       function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory) {
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory) {
     	  
     	var vm = this;
         
     	vm.products =[];
+
+      // Load stores 
+      storesFactory.initLoadStores().then(function successCallback(result){
+          vm.stores=result.data;
+      });
     	
+      // Load products 
+      productsFactory.initLoadProducts().then(function successCallback(result){
+          vm.products=result.data;
+      });
+
+      // Load products 
+/*      productsFactory.getAllProducts().then(function(data) {
+        vm.products = data;
+      });*/
     	// Load products 
-        $http({
+/*      $http({
             method : 'GET',
             url : 'products/'
         }).then(function successCallback(response) {
-        	console.log("success response: ", response);
-        	console.log("success response Data: ", response.data);
+        	console.log("prod: success response Data: ", response.data);
         	vm.products = response.data;
         }, function errorCallback(response) {
             console.log(response.statusText);
-        });
+      });*/
     	
-    	vm.test = function(productId) {
+    	vm.reload = function(productId) {
+        vm.stores = storesFactory.getAllStores();
     		vm.products = productsFactory.getAllProducts();
-        };
+      };
+
+      vm.getStoreQuantity = function(storeStock, productStock)
+      {
+        var quantity = 0;
+        for (var i = 0, len = storeStock.length; i < len; i++) {
+          for(var j = 0, len1 = productStock.length; j < len1; j++){
+            if (storeStock[i].id === productStock[j].id) {
+              return storeStock[i].quantity;
+            }
+          }
+          
+        }  
+
+        return quantity;
+      }
     	
 /*    	vm.products = [];
         function getAllProductsNew() {

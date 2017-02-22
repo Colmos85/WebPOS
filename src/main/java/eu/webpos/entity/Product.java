@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Product {
@@ -21,12 +24,19 @@ public class Product {
 	private String description;
 	private double tradePriceEx;
 	private double markup;
+	private double retailPriceEx;
+	private double retailPriceInc;
 	
-	@ManyToOne
+/*	@OneToOne
+	@JoinColumn(name = "tax_id")
+	private BigDecimal taxBand;*/
+	
+	@OneToOne
     @JoinColumn(name = "brand_id")
 	private Brand brand;
 	
 	@OneToMany(mappedBy = "product")
+	@JsonManagedReference
 	private List<Stock> stock;
 	
 	
@@ -94,14 +104,14 @@ public class Product {
 		this.brand = brand;
 	}
 
-/*	public List<Stock> getStock() {
+	public List<Stock> getStock() {
 		return stock;
 	}
 
 	public void setStock(List<Stock> stock) {
 		this.stock = stock;
 	}
-	*/
+	
 	
 	
 	

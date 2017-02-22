@@ -36,9 +36,14 @@ md-toolbar md-button{
 }
 
 
+.extendedTableData{
+  padding: 5px;
+}
 
-
-
+.extendedTableData ul{
+  list-style: none;
+  padding: 0;
+}
 
 
 
@@ -82,7 +87,7 @@ table th, td {
 .selectedRow:hover {background-color: #dddddd}
 
 table th{
-  background-color: #464d59;
+  background-color: #d8d8d8; /*#464d59;*/ 
   color: white;
   padding: 15px;
   border-bottom: 1px solid #ddd;

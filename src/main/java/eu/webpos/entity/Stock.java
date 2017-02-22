@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Stock {
 	
@@ -19,10 +21,12 @@ public class Stock {
 	
 	@ManyToOne
     @JoinColumn(name = "store_id")
+	@JsonBackReference
 	private Store store;
 	
 	@ManyToOne
     @JoinColumn(name = "product_id")
+	@JsonBackReference
 	private Product product;
 
 

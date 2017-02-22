@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Store {
@@ -23,17 +26,15 @@ public class Store {
 	private String address3;
 	private String contactNum;
 	
-	@ManyToOne
+	@OneToOne
     @JoinColumn(name = "company_id")
 	private Company company;
 	
-	
 	@OneToMany(mappedBy = "store")
+	@JsonManagedReference
 	private List<Stock> stock;
 	
 	
-	
-
 	public Long getStoreId() {
 		return id;
 	}
@@ -89,5 +90,7 @@ public class Store {
 	public void setStock(List<Stock> stock) {
 		this.stock = stock;
 	}
+	
+	
 
 }
