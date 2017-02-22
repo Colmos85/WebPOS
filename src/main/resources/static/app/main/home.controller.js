@@ -19,9 +19,9 @@
         
         // Set the token from storage to be the default on http requests
         // After refresh page the token will be retrieved from storage
-    	if(localStorage.getItem('token')){
-    		$http.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
-    	}
+      	if(localStorage.getItem('token')){
+      		$http.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('token');
+      	}
 
         //vm.user = AuthService.user;
 
@@ -49,10 +49,22 @@
 
     .controller("titleController", function($rootScope, $log, $state, $timeout, $location, $scope, $interval, AuthService) {
         
-    	// set the username for the title bar
-    	if(AuthService.user !== null){
-    		$scope.username = AuthService.user.firstName;
-    	}
+      	// set the username for the title bar
+      	if(AuthService.user !== null){
+          console.log("titleController - if AuthService had a username!");
+      		$scope.username = AuthService.user.firstName;
+      	}
+        else{ // get it from the localstorage
+          console.log("titleController - if AuthService has NO username!");
+          if(localStorage.getItem('user') !== null)
+          {
+            console.log("titleController - else local storage has user!");
+            var retrievedObject = localStorage.getItem('user');
+            AuthService.user = JSON.parse(retrievedObject);
+            $scope.username = AuthService.user.firstName;
+          }
+          else{console.log("titleController - else local storage has NO user!");};
+        };
     		
         $scope.activeRegister = "Main Register";
 
@@ -60,7 +72,7 @@
         
         var tick = function() {
             $scope.clock = Date.now();
-        }
+        };
         tick();
         $interval(tick, 1000);
 

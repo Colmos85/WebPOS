@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -110,6 +111,22 @@ public class Product {
 
 	public void setStock(List<Stock> stock) {
 		this.stock = stock;
+	}
+
+	public double getRetailPriceEx() {
+		return retailPriceEx;
+	}
+
+	public void setRetailPriceEx(double retailPriceEx) {
+		this.retailPriceEx = retailPriceEx;
+	}
+
+	public double getRetailPriceInc() {
+		return retailPriceInc;
+	}
+
+	public void setRetailPriceInc(double retailPriceInc) {
+		this.retailPriceInc = retailPriceInc;
 	}
 	
 	

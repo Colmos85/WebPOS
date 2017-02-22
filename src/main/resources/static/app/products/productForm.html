@@ -1,5 +1,5 @@
-<md-dialog aria-label="Mango (Fruit)" flex="80">
-	<form name="userForm">
+<md-dialog aria-label="Mango (Fruit)" flex="80" >
+	<form name="productForm">
 		<md-toolbar>
 	      <div class="md-toolbar-tools">
 	        <h2 style="color: white">New Product Form</h2>
@@ -163,15 +163,15 @@
 		</md-dialog-content>
 
 		<md-dialog-actions layout="row">
-			<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+			<!-- <md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
 		        More on Wikipedia
-		      </md-button>
+		      </md-button> -->
 		      <span flex></span>
-		      <md-button ng-click="answer('not useful')">
-		       Not Useful
+		      <md-button ng-click="clear()">
+		       Clear
 		      </md-button>
-		      <md-button ng-click="answer('useful')">
-		        Useful
+		      <md-button ng-click="save('Message passed - saved product')">
+		        Save
 		      </md-button>
 		</md-dialog-actions>
   </form>

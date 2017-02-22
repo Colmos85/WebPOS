@@ -22,8 +22,6 @@
                 $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory) {
     	  
     	var vm = this;
-        
-    	vm.products =[];
 
       // Load stores 
       storesFactory.initLoadStores().then(function successCallback(result){
@@ -31,7 +29,7 @@
       });
     	
       // Load products 
-      productsFactory.initLoadProducts().then(function successCallback(result){
+      productsFactory.getAllProducts().then(function successCallback(result){
           vm.products=result.data;
       });
 
@@ -142,34 +140,145 @@
 	          fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
 	        })
 	        .then(function(answer) {
-	          $scope.status = 'You said the information was "' + answer + '".';
+	          $scope.status = 'Product Saved "' + answer + '".';
 	        }, function() {
-	          scope.status = 'You cancelled the dialog.';
+	          $scope.status = 'You cancelled the dialog.';
 	        });
 	     };
 
-	     function DialogController($scope, $mdDialog) {
-	        $scope.hide = function() {
-	          $mdDialog.hide();
-	        };
-	
-	        $scope.cancel = function() {
-	          $mdDialog.cancel();
-	        };
-	
-	        $scope.answer = function(answer) {
-	          $mdDialog.hide(answer);
-	        };
-	     };
+       function DialogController($scope, $mdDialog) {
+          $scope.hide = function() {
+            $mdDialog.hide();
+          };
+  
+          $scope.cancel = function() {
+            $mdDialog.cancel();
+          };
 
+          $scope.clear = function() {
+            //$mdDialog.cancel();
+            // set all model variables to "";
+          };
+  
+          $scope.save = function(answer) {
+            $mdDialog.hide(answer);
+          };
+       };
 
-	     vm.helloWorld = function(){
-	    	 console.log("Hello from productsCtrl");
-	     };
 	     
     }]) // END OF productsCtrl
 
-    .controller('brandsCtrl', [
+    .controller('prodFormCtrl', [
+      '$rootScope',
+      '$log',
+      '$http',
+      '$q',
+      '$state',
+      '$scope',
+      '$timeout',
+      '$location',
+      '$mdDialog',
+      '$resource',
+      'productsFactory',
+      'storesFactory',
+
+      function ($rootScope, $log, $http, $q, $state, $scope, 
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory) {
+
+        /*$scope.product = {
+          barcode : '',
+          description : ''
+        }*/
+
+      }]) 
+  
+      .controller('brandsCtrl', [
+        '$rootScope',
+        '$scope',
+        '$log',
+        '$mdDialog',
+        'brandsFactory',
+
+        function($rootScope, $scope, $log, $mdDialog, brandsFactory) {
+
+          var vm = this;
+
+          // Load Brands
+          brandsFactory.getAllBrands().then(function successCallback(result){
+              vm.brands = result.data;
+              console.log("Success load brands into Controller");
+              }, function errorCallback(response) {
+              console.log("Unsuccessful - load brands into Controller");
+          });
+
+          vm.openBrandForm = function(event) {
+            $mdDialog.show({
+              controller: DialogController,
+              templateUrl: 'app/products/brandForm.html',
+              parent: angular.element(document.body),
+              targetEvent: event,
+              clickOutsideToClose:true,
+              fullscreen: false // Only for -xs, -sm breakpoints.
+            })
+            .then(function(answer) {
+              $scope.status = 'Product Saved "' + answer + '".';
+            }, function() {
+              $scope.status = 'You cancelled the dialog.';
+            });
+          };
+
+          function DialogController($scope, $mdDialog, brandsFactory) {
+            $scope.hide = function() {
+              $mdDialog.hide();
+            };
+    
+            $scope.cancel = function() {
+              $mdDialog.cancel();
+            };
+
+            $scope.clear = function() {
+              //$mdDialog.cancel();
+              // set all model variables to "";
+            };
+    
+            $scope.save = function(answer) {
+
+              var brand = {
+                brandName : $scope.brand.brandName
+              };
+
+              brandsFactory.insertBrand(brand).then(function(response) {
+                console.log(response.data);
+                brand.id = response.data.id;
+              });
+              console.log("Brand with id?", brand);
+
+              vm.brands.push(brand);
+
+              $mdDialog.hide(answer);
+            };
+
+          }; // END OF DialogController
+
+/*          // Method for adding brand on click save brand in form        
+          vm.saveBrand = function () {
+            //Fake brand data
+            var brand = {
+                name: 'test brand' // should use $scope.formName
+            };
+            brandsFactory.insertBrand(brand)
+              .then(function (response) {
+                  vm.status = 'Inserted brand! Refreshing customer list.';
+                  vm.brands.push(brand);
+              }, function(error) {
+                  vm.status = 'Unable to insert brand: ' + error.message;
+              });
+          };*/
+
+
+
+      }])  
+/*      .controller('brandsCtrl', [
       '$rootScope',
       '$log',
       '$state',
@@ -196,17 +305,10 @@
       'WY').split(' ').map(function(state) {
           return {abbrev: state};
         });
-/*    .config(function($mdThemingProvider) {
 
-      // Configure a dark theme with primary foreground yellow
+      }])*/
 
-      $mdThemingProvider.theme('docs-dark', 'default')
-        .primaryPalette('yellow')
-        .dark();
 
-    });*/
-
-      }])
       .config(function($mdThemingProvider) {
 
       // Configure a dark theme with primary foreground yellow

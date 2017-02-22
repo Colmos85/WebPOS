@@ -183,7 +183,7 @@
 
               'content@home': {
                 templateUrl: 'app/products/products.categorys.view.html',
-                controller: 'productsCtrl'
+                controller: 'productsCtrl as productsCtrl'
                 /*resolve: {
                     products: function(productsFactory) {
                         return productsFactory.getProducts();
@@ -199,7 +199,7 @@
 
               'content@home': {
                 templateUrl: 'app/products/products.brands.view.html',
-                controller: 'productsCtrl'
+                controller: 'brandsCtrl as brandsCtrl'
               }
             }
           })

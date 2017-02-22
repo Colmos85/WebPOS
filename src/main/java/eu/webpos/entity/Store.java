@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -32,6 +33,7 @@ public class Store {
 	
 	@OneToMany(mappedBy = "store")
 	@JsonManagedReference
+	//@JsonBackReference
 	private List<Stock> stock;
 	
 	
