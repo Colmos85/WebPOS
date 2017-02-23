@@ -17,9 +17,10 @@
       '$resource',
       'productsFactory',
       'storesFactory',
+      'brandsFactory',
 
       function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory) {
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory) {
     	  
     	var vm = this;
 
@@ -31,6 +32,11 @@
       // Load products 
       productsFactory.getAllProducts().then(function successCallback(result){
           vm.products=result.data;
+      });
+
+      // Load Brands
+      brandsFactory.getAllBrands().then(function successCallback(result){
+          vm.brands = result.data;
       });
 
       // Load products 
@@ -67,71 +73,12 @@
 
         return quantity;
       }
-    	
-/*    	vm.products = [];
-        function getAllProductsNew() {
-          var getProductsData = productsFactory.getProducts();
-
-          getProductsData.then(function (post) {
-             vm.products = post.data;
-
-          }, function () {
-             alert('Error in getting post records');
-          });
-        }
-              
-        getAllProductsNew();*/
-
-/*        //$scope.oneProduct = productsFactory.get({id: 1});
-        //var allProducts = productsFactory.query(console.log);
-
-        //$scope.products = null;
-        //$scope.products = productsFactory.allProducts;
-        //$scope.products = productsFactory.getProducts();
-
-        $scope.products = productsFactory.getAllProducts(); //productsFactory.getProducts();
-    	vm.products = [];
-        
-    	vm.hello = "Hello buddy!!!";
-        
-    	vm.test = function(productId) {
-        	//$scope.products = productsFactory.getProducts();
-            //$scope.products = productsFactory.getAllProducts();
-            //$scope.oneProduct = productsFactory.get({id: productId});
-            //$scope.products = productsFactory.query(function(){
-            //    console.log("Length of array AFTER BUTTON PRESS : ", $scope.products.length);
-            //});
-        	
-        	$http({
-                method : 'GET',
-                url : 'products/'
-            }).then(function successCallback(response) {
-            	console.log("Controller http request: ", response);
-            	vm.products = response.data;
-            	return vm.products;
-            	console.log("Length of array: ", vm.products.length);
-            }, function errorCallback(response) {
-                console.log(response.statusText);
-            });
-            
-        };*/
-
-        vm.openDialog = function(){
-	        $mdDialog.show({
-	          controller: function($scope, $mdDialog){
-	            // do something with dialog scope
-	          },
-	          template: '<md-dialog aria-label="My Dialog">'+
-	                        '<md-dialog-content class="sticky-container">Blah Blah' +
-	                        '</md-dialog-content>' +
-	                        '<md-button ng-click=close()>Close</md-button>' +
-	                        '</md-dialog>',
-	          targetEvent: event
-	        });
-	     };
 
 	     vm.openProductForm = function(event) {
 	        $mdDialog.show({
+            //isolateScope: false,
+            locals:{
+              brands: vm.brands},
 	          controller: DialogController,
 	          templateUrl: 'app/products/productForm.html',
 	          parent: angular.element(document.body),
@@ -146,7 +93,10 @@
 	        });
 	     };
 
-       function DialogController($scope, $mdDialog) {
+       function DialogController($scope, $mdDialog, brands, brandsFactory, storesFactory) {
+          // inject brands from parent ctrl and set to dialogs isolated scope variable
+          $scope.brands = brands;
+
           $scope.hide = function() {
             $mdDialog.hide();
           };
@@ -161,6 +111,30 @@
           };
   
           $scope.save = function(answer) {
+
+            // Create the product object
+            var product = {
+              barcode : $scope.product.barcode
+            };
+
+            // set brand
+            //product.brand = $scope.product.brand
+
+            // set category
+
+            console.log("Product created", product);
+/*            // send request to factory to create new Product in the database
+            productsFactory.insertProduct(product).then(function(response) {
+              console.log(response.data);
+              product.id = response.data.id;
+            });
+
+            //push product to products
+            vm.products.push(product);*/
+
+            // for each store add quantity
+            //????
+
             $mdDialog.hide(answer);
           };
        };
