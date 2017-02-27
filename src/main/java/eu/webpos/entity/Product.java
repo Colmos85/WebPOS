@@ -1,5 +1,6 @@
 package eu.webpos.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -28,9 +29,9 @@ public class Product {
 	private double retailPriceEx;
 	private double retailPriceInc;
 	
-/*	@OneToOne
-	@JoinColumn(name = "tax_id")
-	private BigDecimal taxBand;*/
+	@OneToOne // should be ManyToOne
+	@JoinColumn(name = "tax_band_id")
+	private TaxBand taxBand; //BigDecimal taxBand;
 	
 	@OneToOne
     @JoinColumn(name = "brand_id")
@@ -127,6 +128,14 @@ public class Product {
 
 	public void setRetailPriceInc(double retailPriceInc) {
 		this.retailPriceInc = retailPriceInc;
+	}
+
+	public TaxBand getTaxBand() {
+		return taxBand;
+	}
+
+	public void setTaxBand(TaxBand taxBand) {
+		this.taxBand = taxBand;
 	}
 	
 	

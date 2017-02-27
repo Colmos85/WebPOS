@@ -33,7 +33,6 @@ public class Store {
 	
 	@OneToMany(mappedBy = "store")
 	@JsonManagedReference
-	//@JsonBackReference
 	private List<Stock> stock;
 	
 	

@@ -23,7 +23,6 @@ public class Stock {
 	@ManyToOne
     @JoinColumn(name = "store_id")
 	@JsonBackReference
-	//@JsonManagedReference
 	private Store store;
 	
 	@ManyToOne
@@ -59,14 +58,14 @@ public class Stock {
 		this.store = store;
 	}
 
-	public Product getProduct() {
+/*	public Product getProduct() {
 		return product;
 	}
 
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	
+	*/
 	
 	
 }

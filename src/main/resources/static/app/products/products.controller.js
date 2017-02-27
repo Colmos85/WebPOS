@@ -18,9 +18,10 @@
       'productsFactory',
       'storesFactory',
       'brandsFactory',
+      'taxBandsFactory',
 
       function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory) {
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory, taxBandsFactory) {
     	  
     	var vm = this;
 
@@ -37,6 +38,11 @@
       // Load Brands
       brandsFactory.getAllBrands().then(function successCallback(result){
           vm.brands = result.data;
+      });
+
+      // Load Tax Bands
+      taxBandsFactory.getAllTaxBands().then(function successCallback(result){
+          vm.taxBands = result.data;
       });
 
       // Load products 
@@ -78,7 +84,10 @@
 	        $mdDialog.show({
             //isolateScope: false,
             locals:{
-              brands: vm.brands},
+              brands: vm.brands,
+              stores: vm.stores,
+              taxBands: vm.taxBands
+            },
 	          controller: DialogController,
 	          templateUrl: 'app/products/productForm.html',
 	          parent: angular.element(document.body),
@@ -93,9 +102,118 @@
 	        });
 	     };
 
-       function DialogController($scope, $mdDialog, brands, brandsFactory, storesFactory) {
+       function DialogController($scope, $mdDialog, brands, stores, taxBands, brandsFactory, storesFactory) {
           // inject brands from parent ctrl and set to dialogs isolated scope variable
           $scope.brands = brands;
+          $scope.stores = stores;
+          $scope.taxBands = taxBands;
+
+          $scope.formatTradePriceEx = function()
+          {
+              
+              if($scope.product.tradePriceEx > 0 )
+              {
+                  $scope.product.tradePriceEx = parseFloat($scope.product.tradePriceEx).toFixed(3);
+                  //$scope.product.tradePriceEx = "";
+              }
+          }
+          $scope.formatMarkup = function()
+          {
+             $scope.product.markup = parseFloat($scope.product.markup).toFixed(3);
+             if($scope.product.markup <= 0 )
+              {
+                  $scope.product.markup = "";
+              }
+          }
+          $scope.formatSalesPriceEx = function()
+          {
+              console.log("Exiting salesPriceEx field");
+             $scope.product.SalesPriceEx = parseFloat($scope.product.SalesPriceEx).toFixed(3);
+             if($scope.product.SalesPriceEx <= 0 )
+              {
+                  $scope.product.SalesPriceEx = "";
+              }
+          }
+          $scope.formatSalesPriceInc = function()
+          {
+              console.log("Exiting salesPriceInc field");
+             $scope.product.SalesPriceInc = parseFloat($scope.product.SalesPriceInc).toFixed(3);
+          }
+
+          // calculations for price???
+          $scope.tradePriceExChange = function() {
+            if($scope.product.tradePriceEx <= 0 )
+            {
+              $scope.product.markup = "";
+              $scope.product.salesPriceEx = "";
+              $scope.product.salesPriceInc = "";
+            }
+            if($scope.product.markup > 0 )
+            {
+                var markup = ($scope.product.markup / 100) + 1; 
+                $scope.product.salesPriceEx = ($scope.product.tradePriceEx * markup).toFixed(3);
+                //$scope.product.tradePriceEx = $scope.product.tradePriceEx.toFixed(3);
+            }
+
+          }; 
+
+          $scope.markupChange = function() {
+            if($scope.product.markup <= 0 )
+            {
+              $scope.product.salesPriceEx = "";
+              $scope.product.salesPriceInc = "";
+            }
+            if($scope.product.tradePriceEx <= 0 )
+            {
+              $scope.product.salesPriceEx = "";
+              $scope.product.salesPriceInc = "";
+            }
+            if($scope.product.tradePriceEx > 0 && $scope.product.markup >0)
+            {
+                var markup = ($scope.product.markup / 100) + 1; 
+                $scope.product.salesPriceEx = ($scope.product.tradePriceEx * markup).toFixed(2);
+                //$scope.product.markup = $scope.product.markup.toFixed(3);
+            }
+          };
+
+          $scope.salesPriceExChange = function() {
+            if($scope.product.salesPriceEx <= 0 )
+            {
+              $scope.product.markup = "";
+            }
+            // change the markup based on trade price
+            if($scope.product.tradePriceEx > 0)
+            {
+                var markup = $scope.product.salesPriceEx / $scope.product.tradePriceEx;
+                markup = markup - 1;
+                markup = markup * 100;
+                $scope.product.markup = markup.toFixed(3);
+            }
+          };
+
+          $scope.taxBandChange = function() {
+
+          }
+
+          $scope.salesPriceIncChange = function() {
+            var tax = $scope.product.taxBand;
+            console.log("Tax Band change: ", tax);
+
+            /*if($scope.product.taxBand.)
+            {
+
+            }*/
+            /*if($scope.product.tradePriceEx <= 0 )
+            {
+              $scope.product.markup = 0.00;
+              $scope.product.salesPriceEx = 0.00;
+              $scope.product.salesPriceInc = 0.00;
+            }
+            if($scope.product.tradePriceEx > 0 && $scope.product.markup >0)
+            {
+                $scope.product.salesPriceEx = $scope.product.tradePriceEx * $scope.product.markup;
+            }*/
+          };
 
           $scope.hide = function() {
             $mdDialog.hide();
@@ -114,7 +232,10 @@
 
             // Create the product object
             var product = {
-              barcode : $scope.product.barcode
+              barcode : $scope.product.barcode,
+              description : $scope.product.description,
+              tradePriceEx : $scope.product.tradePriceEx,
+              markup : $scope.product.markup
             };
 
             // set brand
@@ -141,39 +262,16 @@
 
 	     
     }]) // END OF productsCtrl
-
-    .controller('prodFormCtrl', [
-      '$rootScope',
-      '$log',
-      '$http',
-      '$q',
-      '$state',
-      '$scope',
-      '$timeout',
-      '$location',
-      '$mdDialog',
-      '$resource',
-      'productsFactory',
-      'storesFactory',
-
-      function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory) {
-
-        /*$scope.product = {
-          barcode : '',
-          description : ''
-        }*/
-
-      }]) 
   
-      .controller('brandsCtrl', [
+    .controller('brandsCtrl', [
         '$rootScope',
         '$scope',
         '$log',
         '$mdDialog',
-        'brandsFactory',
+        'brandsFactory',/*
+        'recordAvailabilityValidator',*/
 
-        function($rootScope, $scope, $log, $mdDialog, brandsFactory) {
+        function($rootScope, $scope, $log, $mdDialog, brandsFactory/*, recordAvailabilityValidator*/) {
 
           var vm = this;
 
@@ -195,13 +293,16 @@
               fullscreen: false // Only for -xs, -sm breakpoints.
             })
             .then(function(answer) {
-              $scope.status = 'Product Saved "' + answer + '".';
+              $scope.status = 'Brand Saved "' + answer + '".';
             }, function() {
               $scope.status = 'You cancelled the dialog.';
             });
           };
 
-          function DialogController($scope, $mdDialog, brandsFactory) {
+          function DialogController($scope, $mdDialog, brandsFactory/*, recordAvailabilityValidator*/) {
+
+           ///////////$scope.brandForm.brandName.$setValidity('validationError', true);
+
             $scope.hide = function() {
               $mdDialog.hide();
             };
@@ -221,37 +322,95 @@
                 brandName : $scope.brand.brandName
               };
 
-              brandsFactory.insertBrand(brand).then(function(response) {
-                console.log(response.data);
+              brandsFactory.createBrand(brand).then(function successCallback(response) {
                 brand.id = response.data.id;
+                vm.brands.push(brand);
+                /////brandForm.brand.brandName.$error.validationError = true; //$setValidity('custom-err', false); //form.field1.$error.validationError = true;
+                $mdDialog.hide(answer);
+              }, function errorCallback(response) {
+                if(response.status === 409)
+                {
+                  console.log("error - 409");
+                }
+                ////////$scope.brandForm.brandName.$setValidity('validationError', false);
+                ////////brandForm.brand.brandName.$error.validationError = false; // $setValidity('custom-err', false); //$error.validationError = true;//inputName.$setValidity('custom-err', false);
+                console.log("Unsuccessful - ", response.data.errorMessage);
+                $scope.errorMessage = response.data.errorMessage
+
               });
               console.log("Brand with id?", brand);
-
-              vm.brands.push(brand);
-
-              $mdDialog.hide(answer);
             };
 
           }; // END OF DialogController
+      }])  // END of Brands Controller
 
-/*          // Method for adding brand on click save brand in form        
-          vm.saveBrand = function () {
-            //Fake brand data
-            var brand = {
-                name: 'test brand' // should use $scope.formName
-            };
-            brandsFactory.insertBrand(brand)
-              .then(function (response) {
-                  vm.status = 'Inserted brand! Refreshing customer list.';
-                  vm.brands.push(brand);
-              }, function(error) {
-                  vm.status = 'Unable to insert brand: ' + error.message;
-              });
-          };*/
+      /**
+      * This directive can be used with any input tag which will show validation against the server for duplicates.
+      *
+      *<input name="brandName" ng-model="brand.brandName" md-autofocus record-availability-validator="/brands/exists/" required>
+      *<div ng-messages="brandForm.brandName.$error" >
+      *    <div ng-message="recordLoading">
+      *    Checking database...
+      *    </div>
+      *  <div ng-message="recordAvailable">
+      *      The object?? name is already in use...
+      *  </div>
+      *</div>
+      *
+      */
+      .directive('recordAvailabilityValidator', ['$http', function($http) {
+          return {
+              /*restrict: 'A',*/
+              /*scope: {
+                recordAvailabilityValidator: "="
+              },*/
+              require: 'ngModel',
+              link: function(scope, element, attrs, ngModel) {
 
+                  var apiUrl = attrs.recordAvailabilityValidator;
 
+                  function setAsLoading(bool) {
+                      ngModel.$setValidity('recordLoading', !bool);
+                  }
 
-      }])  
+                  function setAsAvailable(bool) {
+                      ngModel.$setValidity('recordAvailable', bool);
+                  }
+                  ngModel.$parsers.push(function(value) {
+                      if (!value || value.length == 0) 
+                      {
+                        setAsLoading(false);
+                        setAsAvailable(true);
+                        return;
+                      }
+                      apiUrl = attrs.recordAvailabilityValidator.concat(value);
+                      setAsLoading(true);
+                      setAsAvailable(false);
+                      $http.get(apiUrl, {
+                          v: value
+                      }).then(function successCallback(response) {
+                          //value = response.data;
+                          if(response.data === false) // if object does not exist
+                          {
+                            //value = response.data;
+                            setAsLoading(false);
+                            setAsAvailable(true);
+                          }else{
+                            //value = response.data;
+                            setAsLoading(false);
+                            setAsAvailable(false);
+                          }
+                          
+                      })/*.error(function() {
+                          setAsLoading(false);
+                          setAsAvailable(false);
+                      })*/;
+                      return value;
+                  })
+              }
+          }
+      }])
+
 /*      .controller('brandsCtrl', [
       '$rootScope',
       '$log',

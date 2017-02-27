@@ -57,20 +57,21 @@
         }
       });
     })
-/*    .config(function ($mdThemingProvider, $locationProvider, $compileProvider) {
+    .config(function ($mdThemingProvider, $locationProvider, $compileProvider) {
       $compileProvider.preAssignBindingsEnabled(true);
       $locationProvider.html5Mode(false);
-      $mdThemingProvider.theme('default')
+      /*$mdThemingProvider.theme('default')
         .primaryPalette('light-blue', {
           'default': '300'
         })
         .accentPalette('deep-orange', {
           'default': '500'
-        });
-    })*/
+        });*/
+    })
     .config(function ($httpProvider) {
         delete $httpProvider.defaults.headers.common['X-Requested-With'];
     })
+    
     .config(['$stateProvider', '$urlRouterProvider', '$logProvider',
       function ($stateProvider, $urlRouterProvider) {
 

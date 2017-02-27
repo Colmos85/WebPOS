@@ -58,11 +58,7 @@
           return $http.get(urlBase + '/' + id + '/orders');
       };
 */
-
-
-
       return factory;
-
 
     }]) // END OF productsFactory
 
@@ -81,7 +77,7 @@
         return $http.get(urlBase + '/' + id);
       };
 
-      factory.insertBrand = function (brand) {
+      factory.createBrand = function (brand) {
           return $http.post(urlBase, brand);
       };
 
@@ -96,5 +92,35 @@
       return factory;
 
     }]) // END OF brandsFactory
+
+    .factory('taxBandsFactory', ['$log','$http', function($log, $http) {
+
+      var urlBase = 'taxbands/';
+      var factory = this;
+      
+
+      factory.getAllTaxBands = function(){
+        return $http.get(urlBase);
+      }
+
+      factory.getTaxBand = function (id) {
+        return $http.get(urlBase + '/' + id);
+      };
+
+      factory.createTaxBand = function (brand) {
+          return $http.post(urlBase, brand);
+      };
+
+      factory.updateTaxBand = function (brand) {
+          return $http.put(urlBase + '/' + brand.ID, brand)
+      };
+
+      factory.deleteTaxBand = function (id) {
+          return $http.delete(urlBase + '/' + id);
+      };
+
+      return factory;
+
+    }]) // END OF tax bands Factory
 
 })();

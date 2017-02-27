@@ -1,5 +1,5 @@
-<md-dialog aria-label="Mango (Fruit)" flex="80" >
-	<form name="productForm">
+	<md-dialog aria-label="Mango (Fruit)" flex="80" >
+	<form name="productForm" novalidate ng-submit="save()">
 		<md-toolbar>
 	      <div class="md-toolbar-tools">
 	        <h2 style="color: white">New Product Form</h2>
@@ -23,21 +23,27 @@
 									
 							<md-input-container class="md-block" flex-gt-sm>
 					            <label>Barcode</label>
-					            <input name="barcode" ng-model="product.barcode" required>
+					            <input name="barcode" ng-model="product.barcode" md-autofocus required>
 					            <div ng-messages="productForm.barcode.$error">
 							      	<div ng-message="required">This is required!</div>
 							    </div>
 					        </md-input-container>
 					        <md-input-container class="md-block" flex-gt-sm>
 					            <label>Description</label>
-					            <input ng-model="product.description">
+					            <input name="description" ng-model="product.description" required>
+					            <div ng-messages="productForm.description.$error">
+							      	<div ng-message="required">This is required!</div>
+							    </div>
 					        </md-input-container>
 					        <md-input-container class="md-block" flex-gt-sm>
 					            <label>Brand</label>
 					            <md-select ng-model="product.brand">
-					              <md-option ng-repeat="brand in brands" value="{{brand.brandName}}">
+					              <md-option name="brand" ng-repeat="brand in brands" value="{{brand.brandName}}" required>
 					                {{brand.brandName}}
 					              </md-option>
+					              <div ng-messages="productForm.brand.$error">
+								      <div ng-message="required">This is required!</div>
+								  </div>
 					            </md-select>
 				          	</md-input-container>
 				          	<md-input-container class="md-block" flex-gt-sm>
@@ -77,8 +83,8 @@
 							
 							<div layout="column" flex layout-gt-sm="row">
 								<md-input-container class="md-block" flex-gt-sm>
-						            <label>Cost Price Ex Vat</label>
-						            <input ng-model="product.tradePriceEx">
+						            <label>Trade Price Ex Vat</label>
+						            <input ng-model="product.tradePriceEx" ng-change="tradePriceExChange()" ng-blur="formatTradePriceEx()">
 						        </md-input-container>
 						        <div hide show-gt-sm>
 						        	<!-- <md-icon md-font-icon="close" />
@@ -87,28 +93,28 @@
 						        </div>
 								<md-input-container class="md-block" flex-gt-sm>
 						            <label>Markup</label>
-						            <input ng-model="product.markup">
+						            <input ng-model="product.markup" ng-change="markupChange()" ng-blur="formatMarkup()">
 						        </md-input-container>
 						        <div hide show-gt-sm>
 						        	<p style="padding: 13px">=</p>
 						        </div>
 						        <md-input-container class="md-block" flex-gt-sm>
 						            <label>Sales Price Ex Vat</label>
-						            <input ng-model="product.salesPriceEx">
+						            <input ng-model="product.salesPriceEx" ng-change="salesPriceExChange()" ng-blur="formatSalesPriceEx()">
 						        </md-input-container>
 							</div>
 							<div layout="column" layout-gt-sm="row" >
 								<md-input-container class="md-block" flex-gt-sm>
 					            <label>Tax Band</label>
-					            <md-select ng-model="user.state">
-					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
-					                {{state.abbrev}}
+					            <md-select ng-model="product.taxBand">
+					              <md-option ng-repeat="taxBand in taxBands" value="{{taxBand.rate}}">
+					                {{taxBand.name}} - {{taxBand.rate}}%
 					              </md-option>
 					            </md-select>
 				          		</md-input-container>
 						        <md-input-container class="md-block" flex-gt-sm>
 						            <label>Sales Price inc Vat</label>
-						            <input ng-model="product.salesPriceInv">
+						            <input ng-model="product.salesPriceInc" ng-change="salesPriceIncChange()" ng-blur="formatSalesPriceInc()">
 						        </md-input-container>
 							</div>
 						</fieldset>
@@ -119,29 +125,27 @@
 							<legend><h4>Stock</h4></legend>
 							<div layout="column" >
 								
-								<div layout="column" layout-gt-sm="row">
+								<div layout="column" layout-gt-sm="row" ng-repeat="store in stores">
 									<div flex="30">
 							        	<!-- <md-icon md-font-icon="close" />
 			                  			<i class="material-icons md-36 white">close</i> -->
-			                  			<p style="padding-top: 13px"> Ballincollig {{ }} </p>
+			                  			<p style="padding-top: 13px"> {{ store.name }} </p>
 							        </div>
 							        <div flex="25">
 							        	<md-input-container class="md-block" flex-gt-sm">
 								            <label>Quantity to add</label>
-								            <input ng-model="product.barcode">
+								            <input ng-model="product.barcode" type="number">
 								        </md-input-container>
 							        </div >
 							        <div flex="25">
 							        	<md-input-container class="md-block" flex-gt-sm">
-								            <label>Stock : 43{{  }}</label>
+								            <label>Stock : {{  }}</label>
 								            <input ng-model="product.barcode" disabled>
 								        </md-input-container>
 							        </div>
 							    </div>
-							    <div layout="column" layout-gt-sm="row" >
+							    <!-- <div layout="column" layout-gt-sm="row" >
 									<div flex="30">
-							        	<!-- <md-icon md-font-icon="close" />
-			                  			<i class="material-icons md-36 white">close</i> -->
 			                  			<p style="padding-top: 13px"> Mallow {{ }} </p>
 							        </div>
 							        <div flex="25">
@@ -156,7 +160,7 @@
 								            <input ng-model="product.barcode" disabled>
 								        </md-input-container>
 							        </div>
-							    </div>
+							    </div> -->
 							</div>
 						</fieldset>
 					</div>
@@ -173,9 +177,9 @@
 		      <md-button ng-click="clear()">
 		       Clear
 		      </md-button>
-		      <md-button ng-click="save('Message passed - saved product')">
+		      <md-button ng-disabled="brandForm.$invalid" ng-click="save('Message passed - saved product')">
 		        Save
 		      </md-button>
 		</md-dialog-actions>
-  </form>
-</md-dialog>
+		</form>
+	</md-dialog>

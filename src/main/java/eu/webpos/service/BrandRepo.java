@@ -6,5 +6,9 @@ import eu.webpos.entity.Brand;
 
 
 public interface BrandRepo extends JpaRepository<Brand, Integer>{
+	
+	public int countByBrandName(String brandName);
+	public Brand findByBrandName(String brandName);
+	
 
 }
