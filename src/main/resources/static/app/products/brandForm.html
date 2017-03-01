@@ -23,7 +23,7 @@
 						<md-input-container class="md-block" flex-gt-sm>
 				            <label>Brand Name</label>
 				            <input name="brandName" ng-model="brand.brandName" md-autofocus required record-availability-validator="/brands/exists/" >
-				            <div ng-messages="brandForm.brandName.$error">
+				            <div ng-messages="brandForm.brandName.$error"> <!-- multiple ng-if='brandForm.brandName.$touched' -->
 				            	<div ng-message="required">This is required!</div>
 								<div ng-message="recordLoading">
 							      	Checking database...

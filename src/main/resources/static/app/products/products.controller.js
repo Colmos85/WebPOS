@@ -19,9 +19,10 @@
       'storesFactory',
       'brandsFactory',
       'taxBandsFactory',
+      'stockFactory',
 
       function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory, taxBandsFactory) {
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory, taxBandsFactory, stockFactory) {
     	  
     	var vm = this;
 
@@ -44,21 +45,6 @@
       taxBandsFactory.getAllTaxBands().then(function successCallback(result){
           vm.taxBands = result.data;
       });
-
-      // Load products 
-/*      productsFactory.getAllProducts().then(function(data) {
-        vm.products = data;
-      });*/
-    	// Load products 
-/*      $http({
-            method : 'GET',
-            url : 'products/'
-        }).then(function successCallback(response) {
-        	console.log("prod: success response Data: ", response.data);
-        	vm.products = response.data;
-        }, function errorCallback(response) {
-            console.log(response.statusText);
-      });*/
     	
     	vm.reload = function(productId) {
         vm.stores = storesFactory.getAllStores();
@@ -73,14 +59,12 @@
             if (storeStock[i].id === productStock[j].id) {
               return storeStock[i].quantity;
             }
-          }
-          
+          } 
         }  
-
         return quantity;
       }
 
-	     vm.openProductForm = function(event) {
+	    vm.openProductForm = function(event) {
 	        $mdDialog.show({
             //isolateScope: false,
             locals:{
@@ -102,118 +86,137 @@
 	        });
 	     };
 
-       function DialogController($scope, $mdDialog, brands, stores, taxBands, brandsFactory, storesFactory) {
+       function DialogController($scope, $mdDialog, brands, stores, taxBands, brandsFactory, storesFactory, productsFactory, stockFactory) {
           // inject brands from parent ctrl and set to dialogs isolated scope variable
           $scope.brands = brands;
           $scope.stores = stores;
           $scope.taxBands = taxBands;
 
+          //$scope.tradePriceEx = "20.000";
+          
+          $scope.addQuantity = {};
+          $scope.currentStock = {};
+
+
           $scope.formatTradePriceEx = function()
-          {
-              
-              if($scope.product.tradePriceEx > 0 )
+          {   
+              if($scope.tradePriceEx > 0)
               {
-                  $scope.product.tradePriceEx = parseFloat($scope.product.tradePriceEx).toFixed(3);
-                  //$scope.product.tradePriceEx = "";
+                  $scope.tradePriceEx = parseFloat($scope.tradePriceEx).toFixed(3);
               }
           }
           $scope.formatMarkup = function()
           {
-             $scope.product.markup = parseFloat($scope.product.markup).toFixed(3);
-             if($scope.product.markup <= 0 )
+             if($scope.salesPriceEx > 0 /*$scope.product.markup.length !== 0 || typeof $scope.markup !== 'undefined'*/)
               {
-                  $scope.product.markup = "";
+                  $scope.markup = parseFloat($scope.markup).toFixed(3);
               }
           }
           $scope.formatSalesPriceEx = function()
           {
-              console.log("Exiting salesPriceEx field");
-             $scope.product.SalesPriceEx = parseFloat($scope.product.SalesPriceEx).toFixed(3);
-             if($scope.product.SalesPriceEx <= 0 )
+             if($scope.salesPriceEx > 0 )
               {
-                  $scope.product.SalesPriceEx = "";
+                  $scope.salesPriceEx = parseFloat($scope.salesPriceEx).toFixed(3);
               }
           }
           $scope.formatSalesPriceInc = function()
           {
-              console.log("Exiting salesPriceInc field");
-             $scope.product.SalesPriceInc = parseFloat($scope.product.SalesPriceInc).toFixed(3);
+              if($scope.salesPriceInc > 0 )
+              {
+                  $scope.salesPriceInc = parseFloat($scope.salesPriceInc).toFixed(3);
+              }
+             
           }
 
           // calculations for price???
           $scope.tradePriceExChange = function() {
-            if($scope.product.tradePriceEx <= 0 )
+            if($scope.tradePriceEx <= 0 )
             {
-              $scope.product.markup = "";
-              $scope.product.salesPriceEx = "";
-              $scope.product.salesPriceInc = "";
+              $scope.markup = "";
+              $scope.salesPriceEx = "";
+              $scope.salesPriceInc = "";
             }
-            if($scope.product.markup > 0 )
+            if($scope.markup > 0 )
             {
-                var markup = ($scope.product.markup / 100) + 1; 
-                $scope.product.salesPriceEx = ($scope.product.tradePriceEx * markup).toFixed(3);
-                //$scope.product.tradePriceEx = $scope.product.tradePriceEx.toFixed(3);
+                var markup = ($scope.markup / 100) + 1; 
+                $scope.salesPriceEx = ($scope.tradePriceEx * markup).toFixed(3);
+                if(/*$scope.product.taxBand.rate > 0 */typeof $scope.taxBand !== 'undefined')
+                {
+                    var taxBand = ($scope.taxBands.rate / 100) + 1; 
+                    $scope.salesPriceInc = ($scope.salesPriceEx * taxBand).toFixed(3);
+                }
             }
-
           }; 
 
           $scope.markupChange = function() {
-            if($scope.product.markup <= 0 )
+            if($scope.tradePriceEx <= 0 || $scope.markup <= 0)
             {
-              $scope.product.salesPriceEx = "";
-              $scope.product.salesPriceInc = "";
+              $scope.salesPriceEx = "";
+              $scope.salesPriceInc = "";
             }
-            if($scope.product.tradePriceEx <= 0 )
+            if($scope.tradePriceEx > 0 && $scope.markup > 0)
             {
-              $scope.product.salesPriceEx = "";
-              $scope.product.salesPriceInc = "";
-            }
-            if($scope.product.tradePriceEx > 0 && $scope.product.markup >0)
-            {
-                var markup = ($scope.product.markup / 100) + 1; 
-                $scope.product.salesPriceEx = ($scope.product.tradePriceEx * markup).toFixed(2);
-                //$scope.product.markup = $scope.product.markup.toFixed(3);
+                var markup = ($scope.markup / 100) + 1; 
+                $scope.salesPriceEx = ($scope.tradePriceEx * markup).toFixed(2);
+                if(typeof $scope.taxBand !== 'undefined')
+                {
+                    var taxBand = ($scope.taxBands.rate / 100) + 1; 
+                    $scope.salesPriceInc = ($scope.salesPriceEx * taxBand).toFixed(3);
+                }
             }
           };
 
           $scope.salesPriceExChange = function() {
-            if($scope.product.salesPriceEx <= 0 )
+            if($scope.salesPriceEx <= 0 )
             {
-              $scope.product.markup = "";
+              $scope.markup = "";
+              $scope.salesPriceInc = "";
             }
             // change the markup based on trade price
-            if($scope.product.tradePriceEx > 0)
+            if($scope.tradePriceEx > 0)
             {
-                var markup = $scope.product.salesPriceEx / $scope.product.tradePriceEx;
-                markup = markup - 1;
-                markup = markup * 100;
-                $scope.product.markup = markup.toFixed(3);
+                var markup = $scope.salesPriceEx / $scope.tradePriceEx;
+                markup = (markup - 1) * 100;
+                $scope.markup = markup.toFixed(3);
+                if(typeof $scope.taxBand !== 'undefined')
+                {
+                    var taxBand = ($scope.taxBand.rate / 100) + 1; 
+                    $scope.salesPriceInc = ($scope.salesPriceEx * taxBand).toFixed(3);
+                }
             }
           };
 
-          $scope.taxBandChange = function() {
+
+          $scope.taxChanged = function() {
+            if(typeof $scope.salesPriceEx !== 'undefined' || $scope.salesPriceEx > 0)
+                {
+                    var taxBand = ($scope.taxBand.rate / 100) + 1; 
+                    $scope.salesPriceInc = ($scope.salesPriceEx * taxBand).toFixed(3);
+                }
 
           }
 
           $scope.salesPriceIncChange = function() {
-            var tax = $scope.product.taxBand;
-            console.log("Tax Band change: ", tax);
-
-            /*if($scope.product.taxBand.)
+            console.log("Sales Price Inc - changed");
+            if($scope.salesPriceInc <= 0 )
             {
-
-            }*/
-            /*if($scope.product.tradePriceEx <= 0 )
-            {
-              $scope.product.markup = 0.00;
-              $scope.product.salesPriceEx = 0.00;
-              $scope.product.salesPriceInc = 0.00;
+                $scope.salesPriceInc = "";
             }
-            if($scope.product.tradePriceEx > 0 && $scope.product.markup >0)
+            if($scope.salesPriceInc > 0 )
             {
-                $scope.product.salesPriceEx = $scope.product.tradePriceEx * $scope.product.markup;
-            }*/
+                // change ex vat price
+                var tax = ($scope.taxBand.rate / 100) + 1; 
+                $scope.salesPriceEx = ($scope.salesPriceInc / tax).toFixed(3);
+                if($scope.tradePriceEx > 0)
+                {
+                    var markup = $scope.salesPriceEx / $scope.tradePriceEx;
+                    markup = (markup - 1) * 100;
+                    $scope.markup = markup.toFixed(3);
+                }
+            }
           };
+
+
 
           $scope.hide = function() {
             $mdDialog.hide();
@@ -224,7 +227,6 @@
           };
 
           $scope.clear = function() {
-            //$mdDialog.cancel();
             // set all model variables to "";
           };
   
@@ -232,29 +234,52 @@
 
             // Create the product object
             var product = {
-              barcode : $scope.product.barcode,
-              description : $scope.product.description,
-              tradePriceEx : $scope.product.tradePriceEx,
-              markup : $scope.product.markup
+              barcode : $scope.barcode,
+              description : $scope.description,
+              tradePriceEx : $scope.tradePriceEx,
+              markup : $scope.markup,
+              retailPriceEx : $scope.salesPriceEx,
+              retailPriceInc : $scope.salesPriceInc,
+              /*"brand": [
+                  {"id":1,"name":"John Doe"},
+                  {"id":2,"name":"Don Joeh"}
+              ],*/
+              taxBand: $scope.taxBand,
+              brand: $scope.brand
             };
 
-            // set brand
-            //product.brand = $scope.product.brand
+            console.log("Product created 1", product);
 
-            // set category
-
-            console.log("Product created", product);
-/*            // send request to factory to create new Product in the database
-            productsFactory.insertProduct(product).then(function(response) {
-              console.log(response.data);
+            // send request to factory to create new Product in the database
+            productsFactory.insertProduct(product).then(function successCallback(response) {
+              console.log(" Response data " , response.data);
               product.id = response.data.id;
+              console.log("Product created SUCESSFULLY", product);
+              //push product to products
+              //vm.products.push(product);
             });
 
-            //push product to products
-            vm.products.push(product);*/
+             //$scope.addQuantity = {};
+             //$scope.currentStock = {};
 
-            // for each store add quantity
-            //????
+            // for each store create quantity record in DB
+            var index = 0;
+            for(index = 0; index < stores.length; index++){
+
+              var stock = {
+              quantity : $scope.addQuantity[index],
+              product: product,
+              store: stores[index]
+              };
+
+              //vm.products.push(product);
+
+              console.log("Stock created: ", stock);
+
+              stockFactory.createStock(stock).then(function successCallback(response) {
+                console.log(" Response data " , response.data);
+              });
+            }
 
             $mdDialog.hide(answer);
           };

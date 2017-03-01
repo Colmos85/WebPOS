@@ -22,14 +22,14 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;	
 	
-	private String barcode1;
+	private String barcode;
 	private String description;
 	private double tradePriceEx;
 	private double markup;
 	private double retailPriceEx;
 	private double retailPriceInc;
 	
-	@OneToOne // should be ManyToOne
+	@OneToOne // should be ManyToOne?
 	@JoinColumn(name = "tax_band_id")
 	private TaxBand taxBand; //BigDecimal taxBand;
 	
@@ -38,23 +38,14 @@ public class Product {
 	private Brand brand;
 	
 	@OneToMany(mappedBy = "product")
-	@JsonManagedReference
+	@JsonManagedReference(value="product-stock")
 	private List<Stock> stock;
 	
 	
-	public Product(int id, String barcode1, String description, double tradePriceEx, double markup) {
-		super();
-		this.id = id;
-		this.barcode1 = barcode1;
-		this.description = description;
-		this.tradePriceEx = tradePriceEx;
-		this.markup = markup;
-	}
-	
-	public Product()
+/*	public Product()
 	{
 		super();
-	}
+	}*/
 	
 
 
@@ -67,11 +58,11 @@ public class Product {
 	}
 
 	public String getBarcode() {
-		return barcode1;
+		return barcode;
 	}
 
-	public void setBarcode(String barcode1) {
-		this.barcode1 = barcode1;
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
 	}
 
 	public String getDescription() {

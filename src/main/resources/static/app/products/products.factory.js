@@ -9,31 +9,6 @@
       var urlBase = 'products/';
       var factory = this;
 
-      //var allProducts = [{"id":1,"description":"Office Home and Business 2013","tradePriceEx":10.0,"markup":10.0,"quantity":50,"barcode":"13321566324"}];
-
-/*      factory.loadAllProducts = function(){
-          $http({
-              method : 'GET',
-              url : 'products/'
-          }).then(function successCallback(response) {
-          	console.log("Products: success response Data: ", response.data);
-          	allProducts = response.data;
-            return allProducts;
-          }, function errorCallback(response) {
-              console.log(response.statusText);
-          });
-      };
-
-      factory.loadAllProducts();
-      //loadAllProducts(); // not defined on load
-      
-      factory.getAllProducts = function () {
-          factory.loadAllProducts();
-          return allProducts;
-      };*/
-
-
-
       factory.getAllProducts = function(){
         return $http.get(urlBase);
       }
@@ -123,4 +98,24 @@
 
     }]) // END OF tax bands Factory
 
+    .factory('stockFactory', ['$log','$http', function($log, $http) {
+
+      var urlBase = 'stock/';
+      var factory = this;
+
+      factory.createStock = function (stock) {
+          return $http.post(urlBase, stock);
+      };
+
+      factory.updateStock = function (stock) {
+          return $http.put(urlBase + '/' + brand.ID, brand)
+      };
+
+      factory.deleteStock = function (id) {
+          return $http.delete(urlBase + '/' + id);
+      };
+
+      return factory;
+
+    }]) // END OF tax bands Factory
 })();

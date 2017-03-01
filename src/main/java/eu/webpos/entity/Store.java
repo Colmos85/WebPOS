@@ -32,7 +32,7 @@ public class Store {
 	private Company company;
 	
 	@OneToMany(mappedBy = "store")
-	@JsonManagedReference
+	@JsonManagedReference(value="store-stock")
 	private List<Stock> stock;
 	
 	

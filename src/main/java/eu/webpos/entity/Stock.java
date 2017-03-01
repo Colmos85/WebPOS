@@ -22,12 +22,12 @@ public class Stock {
 	
 	@ManyToOne
     @JoinColumn(name = "store_id")
-	@JsonBackReference
+	@JsonBackReference(value="store-stock")
 	private Store store;
 	
 	@ManyToOne
     @JoinColumn(name = "product_id")
-	@JsonBackReference
+	@JsonBackReference(value="product-stock")
 	private Product product;
 
 
@@ -58,14 +58,14 @@ public class Stock {
 		this.store = store;
 	}
 
-/*	public Product getProduct() {
+	public Product getProduct() {
 		return product;
 	}
 
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-	*/
+	
 	
 	
 }

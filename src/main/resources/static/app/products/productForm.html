@@ -23,33 +23,33 @@
 									
 							<md-input-container class="md-block" flex-gt-sm>
 					            <label>Barcode</label>
-					            <input name="barcode" ng-model="product.barcode" md-autofocus required>
+					            <input name="barcode" ng-model="barcode" md-autofocus required>
 					            <div ng-messages="productForm.barcode.$error">
 							      	<div ng-message="required">This is required!</div>
 							    </div>
 					        </md-input-container>
 					        <md-input-container class="md-block" flex-gt-sm>
 					            <label>Description</label>
-					            <input name="description" ng-model="product.description" required>
+					            <input name="description" ng-model="description" required>
 					            <div ng-messages="productForm.description.$error">
 							      	<div ng-message="required">This is required!</div>
 							    </div>
 					        </md-input-container>
 					        <md-input-container class="md-block" flex-gt-sm>
 					            <label>Brand</label>
-					            <md-select ng-model="product.brand">
-					              <md-option name="brand" ng-repeat="brand in brands" value="{{brand.brandName}}" required>
+					            <md-select ng-model="brand">
+					              <md-option name="brand" ng-repeat="brand in brands" ng-value="{{brand}}" required>
 					                {{brand.brandName}}
 					              </md-option>
-					              <div ng-messages="productForm.brand.$error">
-								      <div ng-message="required">This is required!</div>
-								  </div>
 					            </md-select>
+					            <div ng-messages="productForm.brand.$error">
+								      <div ng-message="required">This is required!</div>
+								</div>
 				          	</md-input-container>
 				          	<md-input-container class="md-block" flex-gt-sm>
 					            <label>Category</label>
 					            <md-select ng-model="user.state">
-					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
+					              <md-option ng-repeat="state in states" ng-value="{{state.abbrev}}">
 					                {{state.abbrev}}
 					              </md-option>
 					            </md-select>
@@ -84,7 +84,7 @@
 							<div layout="column" flex layout-gt-sm="row">
 								<md-input-container class="md-block" flex-gt-sm>
 						            <label>Trade Price Ex Vat</label>
-						            <input ng-model="product.tradePriceEx" ng-change="tradePriceExChange()" ng-blur="formatTradePriceEx()">
+						            <input ng-model="tradePriceEx" ng-change="tradePriceExChange()" ng-blur="formatTradePriceEx()">
 						        </md-input-container>
 						        <div hide show-gt-sm>
 						        	<!-- <md-icon md-font-icon="close" />
@@ -92,29 +92,29 @@
 		                  			<p style="padding: 13px">x</p>
 						        </div>
 								<md-input-container class="md-block" flex-gt-sm>
-						            <label>Markup</label>
-						            <input ng-model="product.markup" ng-change="markupChange()" ng-blur="formatMarkup()">
+						            <label>Markup %</label>
+						            <input ng-model="markup" ng-change="markupChange()" ng-blur="formatMarkup()">
 						        </md-input-container>
 						        <div hide show-gt-sm>
 						        	<p style="padding: 13px">=</p>
 						        </div>
 						        <md-input-container class="md-block" flex-gt-sm>
 						            <label>Sales Price Ex Vat</label>
-						            <input ng-model="product.salesPriceEx" ng-change="salesPriceExChange()" ng-blur="formatSalesPriceEx()">
+						            <input ng-model="salesPriceEx" ng-change="salesPriceExChange()" ng-blur="formatSalesPriceEx()">
 						        </md-input-container>
 							</div>
 							<div layout="column" layout-gt-sm="row" >
 								<md-input-container class="md-block" flex-gt-sm>
 					            <label>Tax Band</label>
-					            <md-select ng-model="product.taxBand">
-					              <md-option ng-repeat="taxBand in taxBands" value="{{taxBand.rate}}">
-					                {{taxBand.name}} - {{taxBand.rate}}%
+					            <md-select ng-model="taxBand" >
+					              <md-option ng-repeat="tax in taxBands" ng-value="{{tax}}" ng-blur="taxChanged()">
+					                {{tax.name}} - {{tax.rate}}%
 					              </md-option>
 					            </md-select>
 				          		</md-input-container>
 						        <md-input-container class="md-block" flex-gt-sm>
 						            <label>Sales Price inc Vat</label>
-						            <input ng-model="product.salesPriceInc" ng-change="salesPriceIncChange()" ng-blur="formatSalesPriceInc()">
+						            <input ng-model="salesPriceInc" ng-change="salesPriceIncChange()" ng-blur="formatSalesPriceInc()">
 						        </md-input-container>
 							</div>
 						</fieldset>
@@ -134,33 +134,22 @@
 							        <div flex="25">
 							        	<md-input-container class="md-block" flex-gt-sm">
 								            <label>Quantity to add</label>
-								            <input ng-model="product.barcode" type="number">
+								            <input ng-model="addQuantity[$index]" type="number">
 								        </md-input-container>
 							        </div >
 							        <div flex="25">
 							        	<md-input-container class="md-block" flex-gt-sm">
-								            <label>Stock : {{  }}</label>
-								            <input ng-model="product.barcode" disabled>
+								            <label>Stock : 1?{{  }}</label>
+								            <input ng-model="currentStock[$index]" disabled>
 								        </md-input-container>
 							        </div>
 							    </div>
-							    <!-- <div layout="column" layout-gt-sm="row" >
-									<div flex="30">
-			                  			<p style="padding-top: 13px"> Mallow {{ }} </p>
-							        </div>
-							        <div flex="25">
-							        	<md-input-container class="md-block" flex-gt-sm">
-								            <label>Quantity to add</label>
-								            <input ng-model="product.barcode">
-								        </md-input-container>
-							        </div >
-							        <div flex="25">
-							        	<md-input-container class="md-block" flex-gt-sm">
-								            <label>Stock : 30{{  }}</label>
-								            <input ng-model="product.barcode" disabled>
-								        </md-input-container>
-							        </div>
-							    </div> -->
+
+							    <div>
+							    	TEST 1: Quantity model value = {{ addQuantity }}
+							    	<br />
+							    	TEST 2: model value = {{ addQuantity[1] }}
+							    </div>
 							</div>
 						</fieldset>
 					</div>

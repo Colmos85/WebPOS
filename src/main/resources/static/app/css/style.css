@@ -48,6 +48,7 @@ md-toolbar md-button{
 
 
 .home-content{
+  padding:2em;
   background-color: #a3a3a3;
   color: black;
 }
@@ -182,7 +183,7 @@ md-toolbar md-button{
 
 
 #newProductBtn{
-  float: left;
+  float: right;
 }
 
 

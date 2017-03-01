@@ -19,7 +19,7 @@
 			            </th>
 			        </tr>
 					<tr>
-						<th st-ratio="20" st-sort="barcode">Barcode</th>
+						<th st-ratio="20" st-sort="barcode">Brand</th>
 						<th st-ratio="45" st-sort="description">Description</th>
 						<th st-ratio="15" st-sort="price">Price</th>
 						<th st-ratio="10">Edit</th>
@@ -32,13 +32,13 @@
 						<td st-ratio="45" >{{product.description}}</td>
 						<td st-ratio="15" >€ {{product.retailPriceInc}}</td> 
 						<td st-ratio="10">
-			              <button  type="button" ng-click="editItem(row)" class="btn btn-sm btn-danger">
+			              <button  type="button" ng-click="editItem(product, $index); $event.stopPropagation(); " class="btn btn-sm btn-danger">
 			                <i class="fa fa-pencil-square-o fa-lg" aria-hidden="true">
 			                </i>
 			              </button>
 			            </td>
 			            <td st-ratio="10">
-			              <button type="button" ng-click="removeItem(row)" class="btn btn-sm btn-danger">
+			              <button type="button" ng-click="removeItem(product, $index); $event.stopPropagation();" class="btn btn-sm btn-danger">
 			                <i class="fa fa-minus-circle fa-lg" aria-hidden="true">
 			                </i>
 			              </button>

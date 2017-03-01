@@ -7,7 +7,7 @@
     }
   });
 
-  app.controller('loginCtrl', function ($http, $q, $scope, $state, AuthService, $rootScope) {
+  app.controller('loginCtrl', function ($http, $q, $scope, $state, $mdToast, AuthService, $rootScope) {
 
     $scope.login = function() {
         // requesting the token by usename and passoword
@@ -23,7 +23,9 @@
           $scope.password = null;
           // checking if the token is available in the response
           if (res.data.token) {
-            $scope.message = 'Successful Login - Token received';
+            console.log("Successful Login");
+            $scope.toastFailedLogin();
+            $scope.message = 'Successful Login';
             // setting the Authorization Bearer token with JWT token
             $http.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token;
             localStorage.setItem('token', res.data.token);
@@ -40,15 +42,25 @@
             // if the token is not present in the response then the
             // authentication was not successful. Setting the error message.
             console.log("Inside the login then else");
-            $scope.message = 'Authetication Failed !';
+            $scope.error = 'Username or password is incorrect';
           }/*, function errorCallback(res){
             $scope.message = 'Authetication Failed !';
           }*/
-        })/*.error(function(error) {
+        }).then(function errorCallback(error) {
           // if authentication was not successful. Setting the error message.
-          $scope.message = 'Authetication Failed !';
-        })*/;
+          console.log("Failed to login");
+          $scope.error = 'Username or password is incorrect';
+          $scope.toastFailedLogin();
+        });
       };
+
+    $scope.toastFailedLogin = function() {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent('Username or password is incorrect')
+          .hideDelay(3000)
+      );
+    }; 
   });
 
 })();
