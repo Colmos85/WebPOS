@@ -14,6 +14,7 @@ public interface ProductRepo extends JpaRepository<Product, Integer>{
 	
 	public int countByBarcode(String barcode);
 	public Product findByBarcode(String barcode);
+	//public void delete(Long id);
 	
 /*	public List<Product> findAllProductDetails(){
 		return @Query("select * from A, AB"

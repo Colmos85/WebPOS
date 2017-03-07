@@ -58,7 +58,7 @@
       $mdToast.show(
         $mdToast.simple()
           .textContent('Username or password is incorrect')
-          .hideDelay(3000)
+          .hideDelay(2000)
       );
     }; 
   });

@@ -48,8 +48,8 @@ md-toolbar md-button{
 
 
 .home-content{
-  padding:2em;
-  background-color: #a3a3a3;
+  padding:1em;
+  background-color: #e8e8e8;/*#a3a3a3;*/
   color: black;
 }
 
@@ -61,7 +61,7 @@ md-toolbar md-button{
 
 .my-table {
   
-  border-top: 5px solid white; /*border-top: 1px solid black;*/
+  /*border-top: 5px solid white;*/ /*border-top: 1px solid black;*/
   border-bottom: none; /*1px solid black;*/
   border-radius: 10px solid;
   border-collapse: collapse;
@@ -104,6 +104,10 @@ md-toolbar md-button{
   border-bottom: 1px solid black;
   border-top: none;
   text-align: left;
+}
+
+.my-table tr{
+  
 }
 
 .my-table tr:hover {background-color: #dddddd}

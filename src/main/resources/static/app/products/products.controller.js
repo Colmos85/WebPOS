@@ -20,13 +20,14 @@
       'brandsFactory',
       'taxBandsFactory',
       'stockFactory',
+      '$mdToast',
 
       function ($rootScope, $log, $http, $q, $state, $scope, 
-                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory, taxBandsFactory, stockFactory) {
+                $timeout, $location, $mdDialog, $resource, productsFactory, storesFactory, brandsFactory, taxBandsFactory, stockFactory, $mdToast) {
     	  
     	var vm = this;
 
-      // Load stores 
+/*      // Load stores 
       storesFactory.initLoadStores().then(function successCallback(result){
           vm.stores=result.data;
       });
@@ -45,12 +46,29 @@
       taxBandsFactory.getAllTaxBands().then(function successCallback(result){
           vm.taxBands = result.data;
       });
-    	
+    	*/
     	vm.reload = function(productId) {
-        vm.stores = storesFactory.getAllStores();
-    		vm.products = productsFactory.getAllProducts();
+        // Load stores 
+        storesFactory.initLoadStores().then(function successCallback(result){
+            vm.stores=result.data;
+        });
+        // Load products 
+        productsFactory.getAllProducts().then(function successCallback(result){
+            vm.products=result.data;
+        });
+        // Load Brands
+        brandsFactory.getAllBrands().then(function successCallback(result){
+            vm.brands = result.data;
+        });
+        // Load Tax Bands
+        taxBandsFactory.getAllTaxBands().then(function successCallback(result){
+            vm.taxBands = result.data;
+        });
       };
 
+      vm.reload();
+
+      // function to load quantitys on accordian table for store/product 
       vm.getStoreQuantity = function(storeStock, productStock)
       {
         var quantity = 0;
@@ -64,13 +82,41 @@
         return quantity;
       }
 
-	    vm.openProductForm = function(event) {
+      vm.removeItem = function(product) {
+          console.log("selected product to delete", product);
+          productsFactory.deleteProduct(product.id).then(function successCallback(result){
+
+
+              var index = vm.products.indexOf(product);
+              console.log("index", index);
+              vm.products.splice(index, 1);
+
+              $scope.toastMessage("Product deleted successfully");
+          });
+      };
+
+      vm.editItem = function(product, event) {
+          console.log("selected product to edit", product);
+          vm.openProductForm(product, event);
+      };
+
+      $scope.toastFailedLogin = function(message) {
+      $mdToast.show(
+        $mdToast.simple()
+          .textContent(message)
+          .hideDelay(3000)
+      );
+
+	    vm.openProductForm = function(product, event) {
+          // product may be null if new product or an object if existing
+
 	        $mdDialog.show({
             //isolateScope: false,
             locals:{
               brands: vm.brands,
               stores: vm.stores,
-              taxBands: vm.taxBands
+              taxBands: vm.taxBands,
+              selectedProduct: product
             },
 	          controller: DialogController,
 	          templateUrl: 'app/products/productForm.html',
@@ -86,7 +132,7 @@
 	        });
 	     };
 
-       function DialogController($scope, $mdDialog, brands, stores, taxBands, brandsFactory, storesFactory, productsFactory, stockFactory) {
+       function DialogController($scope, $mdDialog, brands, stores, taxBands, selectedProduct, brandsFactory, storesFactory, productsFactory, stockFactory) {
           // inject brands from parent ctrl and set to dialogs isolated scope variable
           $scope.brands = brands;
           $scope.stores = stores;
@@ -96,6 +142,30 @@
           
           $scope.addQuantity = {};
           $scope.currentStock = {};
+
+          if(angular.isUndefined(selectedProduct) || selectedProduct === null)
+          {
+            console.log("Dialog controller - new Product");
+            $scope.headerName = "New Product Form";
+          }
+          else
+          {
+            console.log("dialog controller, product is not null");
+            $scope.headerName = "Edit Product";
+            $scope.tradePriceEx = selectedProduct.tradePriceEx;
+            $scope.description = selectedProduct.description;
+            $scope.barcode = selectedProduct.barcode;
+            $scope.markup = selectedProduct.markup;
+            $scope.taxBand = selectedProduct.taxBand;
+            $scope.salesPriceEx = selectedProduct.retailPriceEx;
+            $scope.salesPriceInc = selectedProduct.retailPriceInc;
+            $scope.brand = selectedProduct.brand;
+
+            for (var i = 0, len = vm.stores.length; i < len; i++) {
+                currentStock[i] = vm.getStoreQuantity(vm.stores[i].stock, product.stock);
+            }
+            
+          }
 
 
           $scope.formatTradePriceEx = function()
@@ -125,7 +195,6 @@
               {
                   $scope.salesPriceInc = parseFloat($scope.salesPriceInc).toFixed(3);
               }
-             
           }
 
           // calculations for price???
@@ -240,50 +309,55 @@
               markup : $scope.markup,
               retailPriceEx : $scope.salesPriceEx,
               retailPriceInc : $scope.salesPriceInc,
-              /*"brand": [
-                  {"id":1,"name":"John Doe"},
-                  {"id":2,"name":"Don Joeh"}
-              ],*/
+              stock:[],
               taxBand: $scope.taxBand,
               brand: $scope.brand
+            };
+
+            // update stock in products object
+            for(var index = 0; index < stores.length; index++){
+              var thisStock = {
+                quantity : $scope.addQuantity[index],
+                store: stores[index]
+              };
+              product.stock.push(thisStock);
             };
 
             console.log("Product created 1", product);
 
             // send request to factory to create new Product in the database
             productsFactory.insertProduct(product).then(function successCallback(response) {
-              console.log(" Response data " , response.data);
               product.id = response.data.id;
-              console.log("Product created SUCESSFULLY", product);
+
+              // update local storage for products/stock quantity
+/*              for(var i = 0; i < product.stock.length; i++){
+                product.stock[i].id = response.data.stock[i].id;
+                console.log("Stock here??", product.stock[i].id, " - ", product.stock[i].quantity);
+              };*/
+              
+              // update local storage for store/stock quantity
+/*              for(var j = 0; j < stores.length; j++){
+                  ??????????  add stock item in the for loop above first  ??????????
+
+                stores[j].stock.push(product.stock[j]);
+                product.stock[i].id = response.data.stock[i].id;
+                
+              };*/
+
               //push product to products
               //vm.products.push(product);
+              //vm.stores.push();
+
+              // refresh the list of products and quantity (less efficient but easier for now)
+              vm.reload();
             });
 
-             //$scope.addQuantity = {};
-             //$scope.currentStock = {};
-
-            // for each store create quantity record in DB
-            var index = 0;
-            for(index = 0; index < stores.length; index++){
-
-              var stock = {
-              quantity : $scope.addQuantity[index],
-              product: product,
-              store: stores[index]
-              };
-
-              //vm.products.push(product);
-
-              console.log("Stock created: ", stock);
-
-              stockFactory.createStock(stock).then(function successCallback(response) {
-                console.log(" Response data " , response.data);
-              });
-            }
-
+            //vm.reload();
             $mdDialog.hide(answer);
           };
        };
+
+
 
 	     
     }]) // END OF productsCtrl

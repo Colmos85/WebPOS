@@ -27,6 +27,7 @@
 
       factory.deleteProduct= function (id) {
           return $http.delete(urlBase + '/' + id);
+          //products.
       };
 
 /*      factory.getOrders = function (id) {

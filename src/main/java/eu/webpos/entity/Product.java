@@ -3,6 +3,7 @@ package eu.webpos.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,7 +21,7 @@ public class Product {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long id;	
+	private int id;	
 	
 	private String barcode;
 	private String description;
@@ -37,23 +38,17 @@ public class Product {
     @JoinColumn(name = "brand_id")
 	private Brand brand;
 	
-	@OneToMany(mappedBy = "product")
+							// may need to delete this cascade and handle stock seperate
+	@OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	@JsonManagedReference(value="product-stock")
 	private List<Stock> stock;
 	
-	
-/*	public Product()
-	{
-		super();
-	}*/
-	
 
-
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
