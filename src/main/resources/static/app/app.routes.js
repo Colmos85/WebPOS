@@ -10,6 +10,7 @@
     'myApp.cashier.module',
     'myApp.auth.module',
     'myApp.general.module',
+    'myApp.customers.module',
     'ngAnimate',
     'ui.router',
     'ngMaterial',
@@ -113,6 +114,17 @@
               'content@home': {
                 templateUrl: 'app/views/gettingstarted.view.html'/*,
                 controller: 'homeCtrl as homeCtrl'*/
+              }
+            }
+          })
+          .state('home.customers', {
+            url: 'customers',
+
+            views: {
+
+              'content@home': {
+                templateUrl: 'app/customers/customers.view.html',
+                controller: 'customersCtrl as customersCtrl'
               }
             }
           })

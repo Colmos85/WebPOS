@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,6 +31,10 @@ public class Product {
 	private double retailPriceEx;
 	private double retailPriceInc;
 	
+	//@Column(name="active", columnDefinition="bit(1) default '1'")
+	private boolean active;
+	
+
 	@OneToOne // should be ManyToOne?
 	@JoinColumn(name = "tax_band_id")
 	private TaxBand taxBand; //BigDecimal taxBand;
@@ -124,7 +129,13 @@ public class Product {
 		this.taxBand = taxBand;
 	}
 	
-	
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 	
 	
 }

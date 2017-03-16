@@ -21,8 +21,8 @@
           return $http.post(urlBase, product);
       };
 
-      factory.updateProduct = function (product) {
-          return $http.put(urlBase + '/' + product.ID, product)
+      factory.updateProduct = function (id, product) {
+          return $http.put(urlBase + '/' + id, product)
       };
 
       factory.deleteProduct= function (id) {

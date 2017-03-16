@@ -42,8 +42,8 @@ public class ProductController {
 	 */
 	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public List<Product> findAll() {
-		return rp.findAll();
+	public List<Product> findAllActive() {
+		return rp.findAllActiveProducts();
 	}
 	
 	@GetMapping("/{id}")
@@ -54,16 +54,22 @@ public class ProductController {
 		return rp.findById(id);
 	};
 	
-	//@GetMapping("/delete/{id}")
+	
 	@DeleteMapping("/{id}")
 	//@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@ResponseBody
 	public ResponseEntity<?> deleteProduct(@PathVariable("id") int id)
 	{
-		System.out.println("Remove product with this id: " + id);
+		/*System.out.println("Remove product with this id: " + id);
 		//int theid = id.intValue(); // must chnage this to support Long
 		Product p = rp.findById(id);
 		rp.delete(p);
+		return new ResponseEntity(new CustomErrorType("Deleted successfully."),HttpStatus.ACCEPTED);*/
+		
+		
+		Product p = rp.findById(id); // get the product
+		p.setActive(false); // set the active to false
+		rp.save(p); //
 		return new ResponseEntity(new CustomErrorType("Deleted successfully."),HttpStatus.ACCEPTED);
 	};
 	
@@ -83,6 +89,73 @@ public class ProductController {
 	}
 	
 	
+	/**
+	 * Method to update an existing product
+	 * by adding a new row with new details
+	 * 
+	 * @param id - id of product to update
+	 * @param product 
+	 * @return
+	 */
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public Product update(@PathVariable("id") int id, @RequestBody Product product) {
+		
+		// get product existing product with id
+		Product existingProductVersion = rp.findById(id);
+		
+		// if these values change then a new row is needed // check for brand, tax and category too
+		if(!existingProductVersion.getDescription().equalsIgnoreCase(product.getDescription()) || 
+				existingProductVersion.getTradePriceEx() != product.getTradePriceEx() ||
+				existingProductVersion.getMarkup() != product.getMarkup() ||
+				existingProductVersion.getRetailPriceEx() != product.getRetailPriceEx())
+		{
+			System.out.println("Going to create a new product row!!!!!");
+			// set product as inactive
+			existingProductVersion.setActive(false);
+			// update product  
+			rp.save(existingProductVersion); // save will update as the id is already there
+			
+			
+			// create new product
+			product.setActive(true);
+			Product newProductVersion = rp.save(product); // saves new as there is no id
+			
+			
+			// update the stock 
+			for(Stock stock : existingProductVersion.getStock())
+	        {
+				// update the stock for new product
+	        	stock.setProduct(newProductVersion);
+	        	stockrp.save(stock);
+	        }
+			
+			for(int i = 0; i < existingProductVersion.getStock().size(); i++)
+			{
+				int newQuantity = existingProductVersion.getStock().get(i).getQuantity() + product.getStock().get(i).getQuantity();
+				existingProductVersion.getStock().get(i).setQuantity(newQuantity);
+				stockrp.save(existingProductVersion.getStock().get(i));
+			}
+			
+			// set stock from existing product to new product
+			newProductVersion.setStock(existingProductVersion.getStock());
+			
+		}
+		else // no new row needed (might only be stock updated or nothing updated?)
+		{
+			System.out.println("Going to update product row!!!!!");
+			// update product (only quantity changed)
+			for(int i = 0; i < existingProductVersion.getStock().size(); i++)
+			{
+				int newQuantity = existingProductVersion.getStock().get(i).getQuantity() + product.getStock().get(i).getQuantity();
+				existingProductVersion.getStock().get(i).setQuantity(newQuantity);
+				stockrp.save(existingProductVersion.getStock().get(i));
+			}
+		}
+		
+		return null;
+	}
+	
+	
 	
 	/**
 	 * Post a new brand to the database
@@ -98,6 +171,8 @@ public class ProductController {
         if (rp.countByBarcode(product.getBarcode()) > 0) {
             return new ResponseEntity(new CustomErrorType("Unable to create. This Product barcode already exist."),HttpStatus.CONFLICT);
         }
+        
+        product.setActive(true);
         createdProduct = rp.save(product);
         
         // create stock 

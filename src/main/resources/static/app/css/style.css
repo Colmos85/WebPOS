@@ -123,7 +123,7 @@ md-toolbar md-button{
   margin: 5px;*/
   /*border: 1px solid #ddd;*/
 }
-.expandedTableRow :hover {background-color: blue;}
+.expandedTableRow :hover {background-color: #ede8e8;} /* Same color */
 
 
 .extendedTableData{

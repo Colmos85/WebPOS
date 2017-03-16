@@ -19,7 +19,7 @@
             password : $scope.password
           }
         }).then(function successCallback(res) {
-          //console.log(res);
+          console.log("LOGIN SUCCESS - ", res);
           $scope.password = null;
           // checking if the token is available in the response
           if (res.data.token) {
@@ -41,8 +41,8 @@
           } else {
             // if the token is not present in the response then the
             // authentication was not successful. Setting the error message.
-            console.log("Inside the login then else");
-            $scope.error = 'Username or password is incorrect';
+            console.log("!!!! Inside the login then else");
+            $scope.error = '!!!! Username or password is incorrect';
           }/*, function errorCallback(res){
             $scope.message = 'Authetication Failed !';
           }*/

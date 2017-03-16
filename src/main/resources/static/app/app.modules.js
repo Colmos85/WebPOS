@@ -14,5 +14,7 @@
     'ngMessages','ngMaterial', 'myApp.general.module']);
   angular.module('myApp.cashier.module', ['ui.bootstrap',
     'ngMessages','ngMaterial']);
+  angular.module('myApp.customers.module', ['ui.bootstrap',
+    'ngMessages','ngMaterial']);
 })();  
   
