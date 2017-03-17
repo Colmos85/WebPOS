@@ -116,6 +116,9 @@
 
       function DialogController($scope, $mdDialog, brands, stores, taxBands, selectedProduct, brandsFactory, storesFactory, productsFactory, stockFactory) {
           // inject brands from parent ctrl and set to dialogs isolated scope variable
+
+          $scope.selectedBrandIndex = -1;
+
           $scope.headerName = "...";
           $scope.brands = brands;
           $scope.stores = stores;
@@ -132,10 +135,12 @@
           {
             console.log("Dialog controller - new Product");
             $scope.headerName = "New Product Form!";
+            $scope.disabled = false;
           }
           else
           {
             update = true;
+            $scope.disabled = true;
             console.log("dialog controller, product is not null");
             $scope.headerName = "Edit Product";
             $scope.tradePriceEx = selectedProduct.tradePriceEx;
@@ -143,6 +148,14 @@
             $scope.barcode = selectedProduct.barcode;
             $scope.markup = selectedProduct.markup;
             
+            //$scope.brand = selectedProduct.brand;
+            for (var i = 0; i < brands.length; i++) {
+                console.log("index is - ", i);
+                if (angular.equals(brands[i], selectedProduct.brand)) {
+                  console.log("Found index - ", i);
+                  $scope.selectedBrandIndex = i;
+                }
+            }
             $scope.taxBand = selectedProduct.taxBand;  // ?????????
 
             $scope.salesPriceEx = selectedProduct.retailPriceEx;
@@ -153,7 +166,6 @@
                 $scope.brand
               }
             }*/
-            $scope.brand = selectedProduct.brand;
 
             for (var i = 0, len = stores.length; i < len; i++) {
                 $scope.currentStock[i] = vm.getStoreQuantity(stores[i].stock, selectedProduct.stock);

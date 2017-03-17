@@ -15,15 +15,15 @@
 	    </md-toolbar>
 
 	    <md-dialog-content>
-			<div layout="column"  layout-gt-sm="row">
-				<div layout="column" flex="30" >
-					<div layout="column" layout-padding layout-margin>
-						<fieldset>
+			<div layout="column"> <!-- outer div always a column, each div is in a column-->
+				<div layout="column" layout-gt-sm="row" flex layout-padding layout-margin> <!-- top div gt-sm is a row with product and price -->
+					<div layout="column" flex="30"> <!-- this is product div -->
+						<fieldset flex>
 						<legend><h4>Product</h4></legend>
 									
 							<md-input-container class="md-block" flex-gt-sm>
 					            <label>Barcode</label>
-					            <input name="barcode" ng-model="barcode" md-autofocus required>
+					            <input name="barcode" ng-model="barcode" ng-disabled="disabled" md-autofocus required>
 					            <div ng-messages="productForm.barcode.$error">
 							      	<div ng-message="required">This is required!</div>
 							    </div>
@@ -38,7 +38,7 @@
 					        <md-input-container class="md-block" flex-gt-sm>
 					            <label>Brand</label>
 					            <md-select ng-model="brand">
-					              <md-option name="brand" ng-repeat="brand in brands" ng-value="{{brand}}" required>
+					              <md-option ng-repeat="(index, brand) in brands" ng-value="brand" required ng-selected="index == {{selectedBrandIndex}}">
 					                {{brand.brandName}}
 					              </md-option>
 					            </md-select>
@@ -54,33 +54,20 @@
 					              </md-option>
 					            </md-select>
 				          	</md-input-container>
-				          	<md-input-container class="md-block" flex-gt-sm>
+				          	<!-- <md-input-container class="md-block" flex-gt-sm>
 					            <label>Sub-Category</label>
 					            <md-select ng-model="user.state">
 					              <md-option ng-repeat="state in states" value="{{state.abbrev}}">
 					                {{state.abbrev}}
 					              </md-option>
 					            </md-select>
-				          	</md-input-container>
+				          	</md-input-container> -->
 				         </fieldset>
-			     	</div>
-			     	<div layout="column" layout-padding layout-margin>
-						<fieldset>
-							<legend><h4>Image</h4></legend>
-								<div>
-									
-								</div>
-						</fieldset>
-				    </div>
-		          	<!-- <h4>Product Image</h4> -->
-				</div> <!-- End of column -->
+			     	</div> <!-- end of product div -->
 
-				<div layout="column" flex="70">
-					<div layout="column" flex="70" layout-margin layout-padding>
-						<fieldset>
+			     	<div layout="column" flex="70"> <!-- this is price div -->
+						<fieldset flex>
 							<legend><h4>Price</h4></legend>
-						
-							
 							<div layout="column" flex layout-gt-sm="row">
 								<md-input-container class="md-block" flex-gt-sm>
 						            <label>Trade Price Ex Vat</label>
@@ -118,13 +105,26 @@
 						        </md-input-container>
 							</div>
 						</fieldset>
-					</div>
-					<div layout="column" flex="70" layout-margin layout-padding>
+					</div> <!-- end of price div -->
 
+			     	<!-- <div layout="column" layout-padding layout-margin>
 						<fieldset>
-							<legend><h4>Stock</h4></legend>
+							<legend><h4>Image</h4></legend>
+								<div>
+									
+								</div>
+						</fieldset>
+				    </div> -->
+		          	<!-- <h4>Product Image</h4> -->
+
+
+				</div> <!-- end of first column div, holds product and price -->
+
+				<div layout="column" flex flex layout-padding layout-margin> <!-- this is the second column div, will only have one div - stock -->
+					<div layout="column" flex > <!-- this is the stock div, will take up full width, if stores grow then will expand down -->
+						<fieldset flex>
+						<legend><h4>Stock</h4></legend>
 							<div layout="column" >
-								
 								<div layout="column" layout-gt-sm="row" ng-repeat="store in stores">
 									<div flex="30">
 							        	<!-- <md-icon md-font-icon="close" />
@@ -143,12 +143,6 @@
 								            <input ng-model="currentStock[$index]" disabled>
 								        </md-input-container>
 							        </div>
-							    </div>
-
-							    <div>
-							    	TEST 1: Quantity model value = {{ addQuantity }}
-							    	<br />
-							    	TEST 2: model value = {{ addQuantity[1] }}
 							    </div>
 							</div>
 						</fieldset>
